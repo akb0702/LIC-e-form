@@ -918,6 +918,7 @@ td.hq-answer input[type="radio"] {
 .plan-sel-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto auto 1fr;
   border: 1px solid #aac;
   overflow: hidden;
   margin-bottom: 0;
@@ -925,8 +926,9 @@ td.hq-answer input[type="radio"] {
 }
 .plan-sel-col {
   border-right: 1px solid #aac;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
 }
 .plan-sel-col:last-child { border-right: none; }
 .plan-sel-header {

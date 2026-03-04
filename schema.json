@@ -1,0 +1,952 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "lic-proposal-form-300",
+  "title": "LIC Proposal Form No. 300 (Rev. 2023) – Proposal for Insurance on Own Life",
+  "type": "object",
+  "properties": {
+
+    "header": {
+      "type": "object",
+      "title": "Header / Form Identification",
+      "properties": {
+        "division":      { "type": "string", "title": "Division" },
+        "branch_office": { "type": "string", "title": "Branch Office" },
+        "photo":         { "type": "string", "title": "Photo of Life to be Assured (base64 or URL)", "format": "uri" }
+      }
+    },
+
+    "office_use": {
+      "type": "object",
+      "title": "For Office Use Only",
+      "properties": {
+        "inward_no":        { "type": "string",  "title": "Award / Inward No." },
+        "proposal_no":      { "type": "string",  "title": "Proposal No." },
+        "date":             { "type": "string",  "title": "Date",              "format": "date" },
+        "date_of_proposal": { "type": "string",  "title": "Date of Proposal",  "format": "date" },
+        "date_of_deposit":  { "type": "string",  "title": "Date of Deposit",   "format": "date" },
+        "boc_no":           { "type": "string",  "title": "B.O.C. No." },
+        "amt_of_deposit":   { "type": "number",  "title": "Amount of Deposit (Rs.)", "minimum": 0 }
+      }
+    },
+
+    "agent": {
+      "type": "object",
+      "title": "Agent / Intermediary Details",
+      "properties": {
+        "do_name":        { "type": "string", "title": "D.O. / CLU / Chief Organiser Name" },
+        "do_code":        { "type": "string", "title": "D.O. Agency Code No." },
+        "do_mobile":      { "type": "string", "title": "D.O. Mobile No.", "pattern": "^[0-9]{10}$" },
+        "agent_name":     { "type": "string", "title": "Agent / Specified Person / DSA / Sup Agent Name" },
+        "agent_code":     { "type": "string", "title": "Agent Code No." },
+        "agent_mobile":   { "type": "string", "title": "Agent Mobile No.", "pattern": "^[0-9]{10}$" },
+        "licence_no":     { "type": "string", "title": "Licence No. / Registration No." },
+        "licence_expiry": { "type": "string", "title": "Date of Expiry of Licence", "format": "date" }
+      }
+    },
+
+    "section_i": {
+      "type": "object",
+      "title": "Section I – Details of the Life to be Assured",
+      "properties": {
+
+        "customer_id": { "type": "string", "title": "LIC Customer ID (existing customers only)" },
+        "kyc_number":  { "type": "string", "title": "C.KYC Number (14-digit Central KYC Registry)", "pattern": "^[0-9]{14}$", "maxLength": 14 },
+
+        "name": {
+          "type": "object",
+          "title": "Name",
+          "properties": {
+            "prefix":      { "type": "string", "title": "Prefix", "enum": ["Mr.", "Mrs.", "Ms.", "Dr.", "Smt.", "Prof."] },
+            "first_name":  { "type": "string", "title": "First Name",  "maxLength": 50 },
+            "middle_name": { "type": "string", "title": "Middle Name", "maxLength": 50 },
+            "last_name":   { "type": "string", "title": "Last Name",   "maxLength": 50 }
+          },
+          "required": ["prefix", "first_name", "last_name"]
+        },
+
+        "father_name":  { "type": "string", "title": "Father's Full Name",  "maxLength": 100 },
+        "mother_name":  { "type": "string", "title": "Mother's Full Name",  "maxLength": 100 },
+
+        "gender":         { "type": "string", "title": "Gender", "enum": ["Male", "Female", "Transgender"] },
+        "marital_status": { "type": "string", "title": "Marital Status", "enum": ["Single", "Married", "Divorced", "Widow/Widower"] },
+        "spouse_name":    { "type": "string", "title": "Spouse's Full Name (if married)", "maxLength": 100 },
+
+        "date_of_birth":   { "type": "string", "title": "Date of Birth", "format": "date" },
+        "age":             { "type": "integer", "title": "Age (years, calculated)", "minimum": 0, "readOnly": true },
+        "place_of_birth":  { "type": "string", "title": "Place / City of Birth" },
+
+        "age_proof": {
+          "type": "string",
+          "title": "Nature of Age Proof Submitted",
+          "enum": [
+            "Birth Certificate", "School Leaving Certificate", "Passport",
+            "Aadhaar Card", "Voter ID", "Driving Licence", "PAN Card",
+            "Service Record", "Baptism Certificate", "Others"
+          ]
+        },
+
+        "nationality":  { "type": "string", "title": "Nationality",  "default": "Indian" },
+        "citizenship":  { "type": "string", "title": "Citizenship",  "default": "Indian" },
+
+        "permanent_address": {
+          "type": "object",
+          "title": "Permanent Address",
+          "properties": {
+            "house":  { "type": "string", "title": "House / Flat No. & Street" },
+            "town":   { "type": "string", "title": "Town / Village" },
+            "city":   { "type": "string", "title": "City" },
+            "state":  { "type": "string", "title": "State" },
+            "pin":    { "type": "string", "title": "PIN Code", "pattern": "^[0-9]{6}$", "maxLength": 6 },
+            "tel":    { "type": "string", "title": "Telephone No." }
+          }
+        },
+
+        "correspondence_address_same_as_permanent": {
+          "type": "boolean",
+          "title": "Correspondence Address same as Permanent Address?"
+        },
+        "correspondence_address": {
+          "type": "object",
+          "title": "Correspondence / Current Address (if different)",
+          "properties": {
+            "house":  { "type": "string" },
+            "town":   { "type": "string" },
+            "city":   { "type": "string" },
+            "state":  { "type": "string" },
+            "pin":    { "type": "string", "pattern": "^[0-9]{6}$", "maxLength": 6 },
+            "tel":    { "type": "string" }
+          }
+        },
+
+        "residential_status": {
+          "type": "string",
+          "title": "Residential Status",
+          "enum": ["Resident Indian", "Non-Resident Indian", "Foreign National of Indian Origin"]
+        },
+        "oci_card": { "type": "boolean", "title": "Holds OCI Card?" },
+        "address_outside_india": {
+          "type": "object",
+          "title": "Address Outside India (for NRI / FNIO)",
+          "properties": {
+            "house":   { "type": "string" },
+            "town":    { "type": "string" },
+            "city":    { "type": "string" },
+            "state":   { "type": "string" },
+            "pin":     { "type": "string", "maxLength": 10 },
+            "country": { "type": "string" }
+          }
+        },
+
+        "mobile": { "type": "string", "title": "Mobile Number", "pattern": "^[0-9]{10}$" },
+        "email":  { "type": "string", "title": "Email ID", "format": "email" },
+
+        "kyc_pmla": {
+          "type": "object",
+          "title": "KYC / PMLA Details",
+          "properties": {
+            "income_tax_assessee": { "type": "boolean", "title": "Income Tax Assessee?" },
+            "pan":                 { "type": "string",  "title": "PAN",  "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]$", "maxLength": 10 },
+            "gstn_registered":     { "type": "boolean", "title": "Registered under GSTN?" },
+            "gstin":               { "type": "string",  "title": "GSTIN (if registered)", "maxLength": 15 },
+            "id_proof_type": {
+              "type": "string",
+              "title": "Proof of Identity Type",
+              "enum": ["Aadhaar", "Driving Licence", "Voter ID", "Passport"]
+            },
+            "id_number":  { "type": "string", "title": "ID Number" },
+            "id_expiry":  { "type": "string", "title": "ID Expiry Date (if applicable)", "format": "date" },
+            "corr_proof": { "type": "string", "title": "Proof of Correspondence Address" }
+          }
+        },
+
+        "occupation": {
+          "type": "object",
+          "title": "Occupation Details",
+          "properties": {
+            "educational_qualification": { "type": "string", "title": "Educational Qualification" },
+            "present_occupation":        { "type": "string", "title": "Present Occupation" },
+            "source_of_income": {
+              "type": "string",
+              "title": "Source of Income",
+              "enum": ["Salary", "Business", "Agriculture", "Profession", "Investments/Savings", "Others"]
+            },
+            "employer_name":      { "type": "string", "title": "Name of Present Employer" },
+            "nature_of_duties":   { "type": "string", "title": "Exact Nature of Duties" },
+            "length_of_service":  { "type": "string", "title": "Length of Service" },
+            "annual_income":      { "type": "number", "title": "Annual Income (Rs.)", "minimum": 0 },
+            "hazardous_occupation": { "type": "boolean", "title": "Engaged in Hazardous Occupation?" },
+            "hazardous_details":    { "type": "string",  "title": "Hazardous Occupation Details (if yes)" },
+            "criminal_record":      { "type": "boolean", "title": "Any Criminal Record?" },
+            "criminal_details":     { "type": "string",  "title": "Criminal Record Details (if yes)" },
+            "pep":                  { "type": "boolean", "title": "Politically Exposed Person (PEP)?" }
+          }
+        },
+
+        "armed_forces": {
+          "type": "object",
+          "title": "Armed Forces Details (if applicable)",
+          "properties": {
+            "in_armed_forces":      { "type": "boolean", "title": "In Armed Forces?" },
+            "wing":                 { "type": "string",  "title": "Wing / Corps / Ship" },
+            "rank":                 { "type": "string",  "title": "Rank" },
+            "last_medical_date":    { "type": "string",  "title": "Date of Last Medical Exam", "format": "date" },
+            "medical_category":     { "type": "string",  "title": "Medical Category" },
+            "below_a1":             { "type": "boolean", "title": "Ever placed below A1 category?" },
+            "below_a1_when":        { "type": "string",  "title": "When placed below A1 (details)" }
+          }
+        },
+
+        "tax_residency": {
+          "type": "object",
+          "title": "Tax Residency (FATCA / CRS)",
+          "properties": {
+            "tax_resident_outside_india": { "type": "boolean", "title": "Tax Resident outside India?" },
+            "self_certification_attached": { "type": "boolean", "title": "Self Certification Form Attached?" }
+          }
+        },
+
+        "bank_details": {
+          "type": "object",
+          "title": "Bank Account Details",
+          "properties": {
+            "account_type":   { "type": "string", "title": "Account Type", "enum": ["Savings", "Current"] },
+            "account_number": { "type": "string", "title": "Account Number" },
+            "micr_code":      { "type": "string", "title": "MICR Code",   "maxLength": 9 },
+            "ifsc_code":      { "type": "string", "title": "IFSC Code",   "maxLength": 11, "pattern": "^[A-Z]{4}0[A-Z0-9]{6}$" },
+            "bank_name_address": { "type": "string", "title": "Bank Name and Branch Address" },
+            "cancelled_cheque_attached": { "type": "boolean", "title": "Cancelled Cheque Attached?" }
+          }
+        }
+      }
+    },
+
+    "section_ii": {
+      "type": "object",
+      "title": "Section II – Proposed Plan Details",
+      "properties": {
+
+        "objective_of_insurance": {
+          "type": "string",
+          "title": "Objective of Insurance",
+          "enum": ["Saving", "Risk Cover", "Saving and Risk Cover"]
+        },
+
+        "proposal_under": {
+          "type": "string",
+          "title": "Proposal Under",
+          "enum": ["Individual", "Employer-Employee", "HUF", "MWP Act"]
+        },
+
+        "plan": {
+          "type": "object",
+          "title": "Plan Details",
+          "properties": {
+            "plan_name":         { "type": "string", "title": "Plan Name" },
+            "plan_no":           { "type": "string", "title": "Plan No." },
+            "policy_term":       { "type": "integer","title": "Policy Term (years)", "minimum": 1 },
+            "premium_paying_term":{ "type": "integer","title": "Premium Paying Term (years)", "minimum": 1 },
+            "sum_assured":       { "type": "number", "title": "Sum Assured (Rs.)", "minimum": 0 },
+            "premium_mode": {
+              "type": "string",
+              "title": "Mode of Premium Payment",
+              "enum": ["Yearly", "Half-Yearly", "Quarterly", "Monthly", "SSS", "NACH", "Single"]
+            },
+            "premium_amount":    { "type": "number", "title": "Premium Amount (Rs.)", "minimum": 0 },
+            "policy_date_back":  { "type": "string", "title": "Policy Date-Back Date (if applicable)", "format": "date" }
+          }
+        },
+
+        "riders": {
+          "type": "object",
+          "title": "Riders Selected",
+          "properties": {
+            "term_assurance_rider":         { "type": "boolean", "title": "LIC's New Term Assurance Rider" },
+            "term_assurance_rider_sa":      { "type": "number",  "title": "Term Rider Sum Assured (Rs.)",      "minimum": 0 },
+            "critical_illness_rider":       { "type": "boolean", "title": "LIC's New Critical Illness Benefit Rider" },
+            "critical_illness_rider_sa":    { "type": "number",  "title": "Critical Illness Benefit (Rs.)",    "minimum": 0 },
+            "pwb_rider":                    { "type": "boolean", "title": "LIC's Premium Waiver Benefit Rider" },
+            "accident_benefit_rider":       { "type": "boolean", "title": "LIC's Accident Benefit Rider (AB)" },
+            "accident_benefit_sa":          { "type": "number",  "title": "Accident Benefit Sum Assured (Rs.)","minimum": 0 },
+            "addb_rider":                   { "type": "boolean", "title": "LIC's AD&DB Rider" },
+            "addb_rider_sa":                { "type": "number",  "title": "AD&DB Rider Sum Assured (Rs.)",     "minimum": 0 }
+          }
+        },
+
+        "police_personnel": {
+          "type": "object",
+          "title": "Police Personnel Details (if applicable)",
+          "properties": {
+            "is_police":         { "type": "boolean", "title": "Is Proposer a Police Personnel?" },
+            "on_duty_rider":     { "type": "boolean", "title": "AB/ADDB Rider opted by Police Personnel?" }
+          }
+        },
+
+        "sss_details": {
+          "type": "object",
+          "title": "SSS (Salary Savings Scheme) Details",
+          "properties": {
+            "authority":   { "type": "string", "title": "SSS Authority" },
+            "badge_no":    { "type": "string", "title": "SSS Badge / Employee No." }
+          }
+        },
+
+        "pwb_agreement": { "type": "boolean", "title": "Agreed to PWB Rider conditions (Q asked)?" },
+
+        "simultaneous_proposals": {
+          "type": "object",
+          "title": "Simultaneous Proposals",
+          "properties": {
+            "any_pending":          { "type": "boolean", "title": "Any simultaneous proposal pending with LIC or other insurers?" },
+            "pending_details":      { "type": "string",  "title": "Simultaneous Proposal Details (if yes)" },
+            "spouse_proposal":      { "type": "boolean", "title": "Simultaneous proposal for spouse?" },
+            "spouse_details":       { "type": "string",  "title": "Spouse Proposal Details (if yes)" }
+          }
+        },
+
+        "lic_portal_registered": { "type": "boolean", "title": "Registered with LIC Portal?" },
+
+        "settlement_option_maturity": { "type": "boolean", "title": "Opted for Settlement Option (Maturity Benefit)?" },
+        "settlement_option_death":    { "type": "boolean", "title": "Opted for Death Benefit in Instalments?" }
+      }
+    },
+
+    "section_iii": {
+      "type": "object",
+      "title": "Section III – Personal and Family Health Details",
+      "properties": {
+
+        "personal_health": {
+          "type": "object",
+          "title": "Personal Health",
+          "properties": {
+            "height_cm":    { "type": "number", "title": "Height (cm)",  "minimum": 50,  "maximum": 250 },
+            "weight_kg":    { "type": "number", "title": "Weight (kg)",  "minimum": 5,   "maximum": 300 },
+
+            "medical_consultation_5yrs": {
+              "type": "boolean",
+              "title": "Consulted doctor / undergone treatment in last 5 years?"
+            },
+            "medical_consultation_details": { "type": "string", "title": "Medical Consultation Details (if yes)" },
+
+            "hospital_admission": { "type": "boolean", "title": "Admitted to hospital in last 5 years?" },
+            "hospital_details":   { "type": "string",  "title": "Hospital Admission Details (if yes)" },
+
+            "absence_from_work":         { "type": "boolean", "title": "Absent from work due to illness/injury in last 5 years?" },
+            "absence_from_work_details": { "type": "string",  "title": "Absence Details (if yes)" },
+
+            "diseases": {
+              "type": "object",
+              "title": "Disease Checklist",
+              "properties": {
+                "lungs_respiratory":       { "type": "boolean", "title": "Lungs / Respiratory disorder" },
+                "hypertension":            { "type": "boolean", "title": "Hypertension / High blood pressure" },
+                "digestive":               { "type": "boolean", "title": "Digestive system / Stomach / Intestines" },
+                "kidney_urinary":          { "type": "boolean", "title": "Kidney / Urinary / Reproductive" },
+                "neurological":            { "type": "boolean", "title": "Neurological / Brain / Nervous system" },
+                "hernia_venereal":         { "type": "boolean", "title": "Hernia / Venereal disease" },
+                "cancer":                  { "type": "boolean", "title": "Cancer / Tumour" },
+                "eyes_ent":                { "type": "boolean", "title": "Eyes / ENT disorder" },
+                "diabetes_endocrine":      { "type": "boolean", "title": "Diabetes / Endocrine / Thyroid" },
+                "bone_joint":              { "type": "boolean", "title": "Bone / Joint / Muscle disorder" },
+                "mental":                  { "type": "boolean", "title": "Mental / Psychiatric disorder" },
+                "infectious":              { "type": "boolean", "title": "Infectious / Communicable disease" },
+                "hepatitis_aids":          { "type": "boolean", "title": "Hepatitis / AIDS / STD" },
+                "operations_injuries":     { "type": "boolean", "title": "Operations / Injuries / Disabilities" },
+                "other":                   { "type": "boolean", "title": "Any other disease / condition" }
+              }
+            },
+
+            "disease_details": {
+              "type": "array",
+              "title": "Details of Diseases / Ailments (for each Yes above)",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "nature":      { "type": "string", "title": "Nature of Disease / Ailment" },
+                  "date":        { "type": "string", "title": "Date of Diagnosis", "format": "date" },
+                  "recovered":   { "type": "string", "title": "Recovered?", "enum": ["Yes", "No"] },
+                  "treatment":   { "type": "string", "title": "Treatment Taken / Ongoing" },
+                  "doctor_name": { "type": "string", "title": "Name & Address of Doctor / Hospital" }
+                }
+              }
+            }
+          }
+        },
+
+        "personal_habits": {
+          "type": "object",
+          "title": "Personal Habits",
+          "properties": {
+            "alcohol":         { "type": "boolean", "title": "Consume Alcohol?" },
+            "alcohol_qty":     { "type": "string",  "title": "Alcohol – Quantity per day" },
+            "alcohol_stopped": { "type": "string",  "title": "Alcohol – If stopped, when?" },
+
+            "narcotics":         { "type": "boolean", "title": "Use Narcotics / Non-prescribed drugs?" },
+            "narcotics_qty":     { "type": "string",  "title": "Narcotics – Quantity / Frequency" },
+            "narcotics_stopped": { "type": "string",  "title": "Narcotics – If stopped, when?" },
+
+            "other_drugs":         { "type": "boolean", "title": "Use any other drugs?" },
+            "other_drugs_qty":     { "type": "string",  "title": "Other Drugs – Quantity / Frequency" },
+            "other_drugs_stopped": { "type": "string",  "title": "Other Drugs – If stopped, when?" },
+
+            "tobacco":         { "type": "boolean", "title": "Used Tobacco in last 60 months?" },
+            "tobacco_qty":     { "type": "string",  "title": "Tobacco – Quantity per day" },
+            "tobacco_stopped": { "type": "string",  "title": "Tobacco – If stopped, when?" }
+          }
+        },
+
+        "present_health_state": {
+          "type": "string",
+          "title": "Present State of Health",
+          "enum": ["Excellent", "Good", "Under Treatment / Poor"]
+        },
+
+        "family_health": {
+          "type": "object",
+          "title": "Family Health History",
+          "properties": {
+            "any_hereditary_disease": { "type": "boolean", "title": "Any hereditary / familial disease in family?" },
+            "father": {
+              "type": "object",
+              "title": "Father",
+              "properties": {
+                "alive":         { "type": "boolean" },
+                "age_if_alive":  { "type": "integer", "minimum": 0 },
+                "health":        { "type": "string"  },
+                "age_at_death":  { "type": "integer", "minimum": 0 },
+                "cause_of_death":{ "type": "string"  }
+              }
+            },
+            "mother": {
+              "type": "object",
+              "title": "Mother",
+              "properties": {
+                "alive":         { "type": "boolean" },
+                "age_if_alive":  { "type": "integer", "minimum": 0 },
+                "health":        { "type": "string"  },
+                "age_at_death":  { "type": "integer", "minimum": 0 },
+                "cause_of_death":{ "type": "string"  }
+              }
+            },
+            "brothers": {
+              "type": "array",
+              "title": "Brothers",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "alive":          { "type": "boolean" },
+                  "age_if_alive":   { "type": "integer", "minimum": 0 },
+                  "health":         { "type": "string"  },
+                  "age_at_death":   { "type": "integer", "minimum": 0 },
+                  "cause_of_death": { "type": "string"  }
+                }
+              }
+            },
+            "sisters": {
+              "type": "array",
+              "title": "Sisters",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "alive":          { "type": "boolean" },
+                  "age_if_alive":   { "type": "integer", "minimum": 0 },
+                  "health":         { "type": "string"  },
+                  "age_at_death":   { "type": "integer", "minimum": 0 },
+                  "cause_of_death": { "type": "string"  }
+                }
+              }
+            },
+            "spouse": {
+              "type": "object",
+              "title": "Spouse",
+              "properties": {
+                "alive":         { "type": "boolean" },
+                "age_if_alive":  { "type": "integer", "minimum": 0 },
+                "health":        { "type": "string"  },
+                "age_at_death":  { "type": "integer", "minimum": 0 },
+                "cause_of_death":{ "type": "string"  }
+              }
+            },
+            "children": {
+              "type": "array",
+              "title": "Children",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "alive":          { "type": "boolean" },
+                  "age_if_alive":   { "type": "integer", "minimum": 0 },
+                  "health":         { "type": "string"  },
+                  "age_at_death":   { "type": "integer", "minimum": 0 },
+                  "cause_of_death": { "type": "string"  }
+                }
+              }
+            }
+          }
+        },
+
+        "female_proposer": {
+          "type": "object",
+          "title": "For Female Proposers Only",
+          "properties": {
+            "pregnant":              { "type": "boolean", "title": "Currently Pregnant?" },
+            "last_delivery_date":    { "type": "string",  "title": "Date of Last Delivery", "format": "date" },
+            "abortion_miscarriage":  { "type": "boolean", "title": "Any abortion / miscarriage / caesarean?" },
+            "abortion_details":      { "type": "string",  "title": "Details (if yes)" },
+            "gynec_consultation":    { "type": "boolean", "title": "Consulted gynaecologist in last 5 years?" },
+            "gynec_details":         { "type": "string",  "title": "Gynaecologist Details (if yes)" },
+            "husband": {
+              "type": "object",
+              "title": "Husband's Details",
+              "properties": {
+                "name":   { "type": "string" },
+                "occupation": { "type": "string" },
+                "annual_income": { "type": "number", "minimum": 0 }
+              }
+            },
+            "husband_existing_insurance": {
+              "type": "array",
+              "title": "Husband's Existing Insurance Policies",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "policy_no":  { "type": "string" },
+                  "insurer":    { "type": "string" },
+                  "plan":       { "type": "string" },
+                  "sum_assured":{ "type": "number", "minimum": 0 },
+                  "status":     { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "section_iv": {
+      "type": "object",
+      "title": "Section IV – Declaration",
+      "properties": {
+
+        "existing_insurance": {
+          "type": "object",
+          "title": "Existing Insurance Policies",
+          "properties": {
+            "policies": {
+              "type": "array",
+              "title": "List of Existing Policies",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "policy_no":        { "type": "string" },
+                  "insurer":          { "type": "string", "title": "Insurer / Branch / Division" },
+                  "plan_name":        { "type": "string" },
+                  "sum_assured":      { "type": "number", "minimum": 0 },
+                  "term_rider_sa":    { "type": "number", "minimum": 0 },
+                  "ci_rider_sa":      { "type": "number", "minimum": 0 },
+                  "ab_addb_sa":       { "type": "number", "minimum": 0 },
+                  "commencement_date":{ "type": "string", "format": "date" },
+                  "revival_date":     { "type": "string", "format": "date" },
+                  "accepted":         { "type": "string", "enum": ["Yes", "No - Give Details"] },
+                  "accepted_details": { "type": "string" },
+                  "medical_type":     { "type": "string", "enum": ["Medical", "Non-Medical"] },
+                  "inforce":          { "type": "string", "enum": ["Yes", "No"] },
+                  "fup_surrender_date":{ "type": "string", "format": "date" }
+                }
+              }
+            },
+            "q14a_proposals_declined":    { "type": "boolean", "title": "Any proposal ever declined / postponed / accepted at extra premium?" },
+            "q14a_details":               { "type": "string" },
+            "q14b_policy_lapsed":         { "type": "boolean", "title": "Any policy lapsed / surrendered in last 3 years?" },
+            "q14b_details":               { "type": "string" },
+            "q14c_policy_assignment":     { "type": "boolean", "title": "Any policy assigned / subjected to loan?" },
+            "q14c_details":               { "type": "string" },
+            "q14d_other_proposals":       { "type": "boolean", "title": "Any other proposals submitted simultaneously?" },
+            "q14d_details":               { "type": "string" }
+          }
+        },
+
+        "nominee": {
+          "type": "object",
+          "title": "Nominee / Appointee Details",
+          "properties": {
+            "nomination_type": {
+              "type": "string",
+              "title": "Type of Nomination",
+              "enum": ["Single", "Multiple"]
+            },
+            "nominees": {
+              "type": "array",
+              "title": "Nominees",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name":          { "type": "string"  },
+                  "share_percent": { "type": "number",  "minimum": 0, "maximum": 100 },
+                  "age":           { "type": "integer", "minimum": 0 },
+                  "relationship":  { "type": "string"  },
+                  "appointee_name":{ "type": "string",  "title": "Appointee Name (if nominee is minor)" },
+                  "appointee_rel": { "type": "string",  "title": "Appointee Relationship" },
+                  "id_type":       { "type": "string",  "enum": ["Aadhaar", "PAN", "Voter ID", "Passport"] },
+                  "id_number":     { "type": "string"  }
+                }
+              }
+            }
+          }
+        },
+
+        "declaration": {
+          "type": "object",
+          "title": "Declaration by Life to be Assured",
+          "properties": {
+            "la_name":       { "type": "string", "title": "Name of Life to be Assured (in declaration)" },
+            "place":         { "type": "string", "title": "Place" },
+            "date":          { "type": "string", "title": "Date of Declaration", "format": "date" }
+          }
+        },
+
+        "witness": {
+          "type": "object",
+          "title": "Witness Details",
+          "properties": {
+            "name":       { "type": "string" },
+            "occupation": { "type": "string" },
+            "address":    { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "addendum_1_settlement_maturity": {
+      "type": "object",
+      "title": "Addendum 1 – Settlement Option (Maturity Benefit)",
+      "properties": {
+        "proposal_no":    { "type": "string",  "title": "Proposal No." },
+        "avail_option":   { "type": "boolean", "title": "Avail Settlement Option?" },
+        "period_years": {
+          "type": "integer",
+          "title": "Settlement Period (years)",
+          "enum": [5, 10, 15]
+        },
+        "benefit_type":   { "type": "string",  "title": "Benefit Type", "enum": ["Full", "Part"] },
+        "partial_amount": { "type": "number",  "title": "Partial Amount (Rs.) – if Part", "minimum": 0 },
+        "partial_percent":{ "type": "number",  "title": "Partial Percentage (%) – if Part", "minimum": 0, "maximum": 100 },
+        "payment_mode": {
+          "type": "string",
+          "title": "Mode of Payment",
+          "enum": ["Yearly", "Half-Yearly", "Quarterly", "Monthly"]
+        },
+        "place":          { "type": "string" },
+        "date":           { "type": "string", "format": "date" },
+        "lba_name":       { "type": "string", "title": "Name of Life to be Assured (signature block)" }
+      }
+    },
+
+    "addendum_2_death_benefit_instalments": {
+      "type": "object",
+      "title": "Addendum 2 – Death Benefit in Instalments",
+      "properties": {
+        "proposal_no":    { "type": "string",  "title": "Proposal No." },
+        "avail_option":   { "type": "boolean", "title": "Avail Death Benefit Instalment option?" },
+        "period_years": {
+          "type": "integer",
+          "title": "Settlement Period (years)",
+          "enum": [5, 10, 15]
+        },
+        "benefit_type":   { "type": "string",  "title": "Benefit Type", "enum": ["Full", "Part"] },
+        "partial_amount": { "type": "number",  "title": "Partial Amount (Rs.) – if Part", "minimum": 0 },
+        "partial_percent":{ "type": "number",  "title": "Partial Percentage (%) – if Part", "minimum": 0, "maximum": 100 },
+        "payment_mode": {
+          "type": "string",
+          "title": "Mode of Payment",
+          "enum": ["Yearly", "Half-Yearly", "Quarterly", "Monthly"]
+        },
+        "place":          { "type": "string" },
+        "date":           { "type": "string", "format": "date" },
+        "lba_name":       { "type": "string", "title": "Name of Life to be Assured (signature block)" }
+      }
+    },
+
+    "addendum_plan_specific": {
+      "type": "object",
+      "title": "Addendum – Plan Specific Details",
+      "properties": {
+
+        "dhan_sanchay_865": {
+          "type": "object",
+          "title": "Dhan Sanchay (Plan 865) – only if applicable",
+          "properties": {
+            "benefit_option": {
+              "type": "string",
+              "title": "Benefit Option",
+              "enum": ["A", "B", "C", "D"]
+            },
+            "payout_modes": {
+              "type": "array",
+              "title": "Payout Modes Selected",
+              "items": { "type": "string", "enum": ["Yearly", "Half-Yearly", "Quarterly", "Monthly"] }
+            }
+          }
+        },
+
+        "jeevan_azad_868": {
+          "type": "object",
+          "title": "Jeevan Azad (Plan 868) – only if applicable",
+          "properties": {
+            "existing_bsa":    { "type": "number",  "title": "Total Existing Basic Sum Assured under Jeevan Azad (excl. this proposal)", "minimum": 0 },
+            "simultaneous":    { "type": "boolean", "title": "Any simultaneous Jeevan Azad proposal?" },
+            "simul_details":   { "type": "string",  "title": "Simultaneous Proposal Details (if yes)" }
+          }
+        },
+
+        "dhan_vriddhi_869": {
+          "type": "object",
+          "title": "Dhan Vriddhi (Plan 869) – only if applicable",
+          "properties": {
+            "death_benefit_option": {
+              "type": "integer",
+              "title": "Death Benefit Option",
+              "enum": [1, 2]
+            }
+          }
+        },
+
+        "jeevan_kiran_870": {
+          "type": "object",
+          "title": "Jeevan Kiran (Plan 870) – only if applicable",
+          "properties": {
+            "category": { "type": "string", "title": "Category", "enum": ["Smoker", "Non-Smoker"] }
+          }
+        },
+
+        "jeevan_utsav_871": {
+          "type": "object",
+          "title": "Jeevan Utsav (Plan 871) – only if applicable",
+          "properties": {
+            "benefit_option": { "type": "integer", "title": "Benefit Option", "enum": [1, 2] }
+          }
+        },
+
+        "aadhar_stambh_shila_943_944": {
+          "type": "object",
+          "title": "Aadhar Stambh (Plan 943) / Aadhar Shila (Plan 944) – only if applicable",
+          "properties": {
+            "existing_sa":   { "type": "number",  "title": "Total Existing Sum Assured under Aadhar Stambh / Shila (excl. this proposal)", "minimum": 0 },
+            "simultaneous":  { "type": "boolean", "title": "Any simultaneous Aadhar Stambh/Shila proposal?" },
+            "simul_details": { "type": "string",  "title": "Simultaneous Proposal Details (if yes)" }
+          }
+        },
+
+        "new_jeevan_amar_955": {
+          "type": "object",
+          "title": "New Jeevan Amar (Plan 955) – only if applicable",
+          "properties": {
+            "category": {
+              "type": "string",
+              "title": "Category",
+              "enum": ["Smoker", "Non-Smoker"]
+            },
+            "death_benefit_option": {
+              "type": "string",
+              "title": "Death Benefit Option",
+              "enum": ["Option I – Level Sum Assured", "Option II – Increasing Sum Assured"]
+            }
+          }
+        },
+
+        "place": { "type": "string", "title": "Place (signature block)" },
+        "date":  { "type": "string", "title": "Date (signature block)", "format": "date" }
+      }
+    },
+
+    "insurance_suitability_questionnaire": {
+      "type": "object",
+      "title": "Insurance Suitability Questionnaire (Section 10 & Waiver)",
+      "properties": {
+
+        "section_10": {
+          "type": "object",
+          "title": "Section 10 – Is total insurance added to the present proposal reasonable in relation to income?",
+          "properties": {
+
+            "agent_declaration": {
+              "type": "object",
+              "title": "Declaration by Agent / Intermediary",
+              "properties": {
+                "agent_name_mr": { "type": "string", "title": "Agent Name (Marathi – मी … नाव)" },
+                "agent_name_hi": { "type": "string", "title": "Agent Name (Hindi – मैंने … नाम)" },
+                "agent_name_en": { "type": "string", "title": "Agent Name (English – I, … name)" },
+                "place":         { "type": "string", "title": "Place" },
+                "date":          { "type": "string", "title": "Date", "format": "date" }
+              }
+            },
+
+            "proposer_declaration": {
+              "type": "object",
+              "title": "Declaration by Proposer / Prospect",
+              "properties": {
+                "proposer_name_mr": { "type": "string", "title": "Proposer Name (Marathi – मला … नाव)" },
+                "proposer_name_hi": { "type": "string", "title": "Proposer Name (Hindi – मैंने … नाम)" },
+                "proposer_name_en": { "type": "string", "title": "Proposer Name (English – I, … name)" },
+                "preferred_plan": {
+                  "type": "object",
+                  "title": "Preferred Plan Details",
+                  "properties": {
+                    "table_no":    { "type": "string", "title": "Table / Saran No." },
+                    "plan_name":   { "type": "string", "title": "Plan Name" },
+                    "term":        { "type": "string", "title": "Term / Avadhi" },
+                    "sum_assured": { "type": "string", "title": "Sum Assured / Biman" },
+                    "mode":        { "type": "string", "title": "Mode / Paddhat" },
+                    "premium":     { "type": "string", "title": "Premium" }
+                  }
+                },
+                "place": { "type": "string", "title": "Place" },
+                "date":  { "type": "string", "title": "Date", "format": "date" }
+              }
+            }
+          }
+        },
+
+        "waiver": {
+          "type": "object",
+          "title": "Waiver of Insurance Suitability Questionnaire",
+          "description": "Filled only if the proposer chooses not to answer the suitability questionnaire",
+          "properties": {
+            "waiver_opted":  { "type": "boolean", "title": "Proposer opted for waiver?" },
+            "place":         { "type": "string",  "title": "Place" },
+            "date":          { "type": "string",  "title": "Date", "format": "date" }
+          }
+        }
+
+      }
+    },
+
+    "moral_hazard_report": {
+      "type": "object",
+      "title": "Agent's Confidential / Moral Hazard Report",
+      "properties": {
+
+        "agent": {
+          "type": "object",
+          "title": "Agent Details (MHR)",
+          "properties": {
+            "name":          { "type": "string" },
+            "code":          { "type": "string" },
+            "mobile":        { "type": "string" },
+            "club_status":   { "type": "string" },
+            "licence_no":    { "type": "string" },
+            "licence_expiry":{ "type": "string", "format": "date" }
+          }
+        },
+        "do": {
+          "type": "object",
+          "title": "D.O. / CLIA Details (MHR)",
+          "properties": {
+            "name":   { "type": "string" },
+            "code":   { "type": "string" },
+            "mobile": { "type": "string" }
+          }
+        },
+
+        "section_i_product": {
+          "type": "object",
+          "title": "Section I – Product Information",
+          "properties": {
+            "proposer_name":            { "type": "string"  },
+            "age":                      { "type": "string"  },
+            "plan_and_term":            { "type": "string"  },
+            "sum_assured":              { "type": "string"  },
+            "plan_explained":           { "type": "boolean", "title": "Plan features explained to proposer?" },
+            "plan_suitable":            { "type": "boolean", "title": "Plan suitable for proposer's needs?" },
+            "benefit_illustration_given":{ "type": "boolean","title": "Benefit illustration given?" }
+          }
+        },
+
+        "section_ii_proposer": {
+          "type": "object",
+          "title": "Section II – Proposer Information",
+          "properties": {
+            "acquaintance_duration":  { "type": "string",  "title": "Duration of acquaintance with proposer" },
+            "is_relative":            { "type": "boolean", "title": "Is proposer a relative?" },
+            "relative_details":       { "type": "string"  },
+            "education":              { "type": "string",  "title": "Educational qualification of proposer" },
+            "is_fnio_oci":            { "type": "boolean", "title": "Is proposer FNIO / OCI?" },
+            "is_pep":                 { "type": "boolean", "title": "Is proposer PEP?" },
+            "terrorist_activities":   { "type": "boolean", "title": "Any terrorist / suspicious activity link?" },
+            "kyc_pmla_complied":      { "type": "boolean", "title": "KYC / PMLA norms complied?" }
+          }
+        },
+
+        "section_iii_financial": {
+          "type": "object",
+          "title": "Section III – Financial Assessment",
+          "properties": {
+            "income_source":    { "type": "string"  },
+            "employment":       { "type": "string"  },
+            "huf":              { "type": "string"  },
+            "other_sources":    { "type": "string"  },
+            "income_proofs": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["ITR", "Bank Statement", "Salary Slip", "CA Certificate"] }
+            },
+            "pan_verified":     { "type": "string"  },
+            "financially_sound":{ "type": "boolean", "title": "Financially sound to pay premiums?" }
+          }
+        },
+
+        "section_iv_previous_insurance": {
+          "type": "object",
+          "title": "Section IV – Previous Insurance",
+          "properties": {
+            "has_previous_policy":       { "type": "boolean" },
+            "declined_deferred_before":  { "type": "boolean", "title": "Any previously declined / deferred proposal?" }
+          }
+        },
+
+        "section_v_health": {
+          "type": "object",
+          "title": "Section V – Health, Habit & Occupation",
+          "properties": {
+            "health_status":             { "type": "string"  },
+            "physical_mental_defects":   { "type": "boolean" },
+            "illness_injury_operation":  { "type": "boolean" },
+            "height":                    { "type": "string"  },
+            "weight":                    { "type": "string"  },
+            "adverse_risk_factors":      { "type": "boolean" },
+            "other_observations":        { "type": "string"  }
+          }
+        },
+
+        "agent_signature": {
+          "type": "object",
+          "properties": {
+            "place": { "type": "string" },
+            "date":  { "type": "string", "format": "date" }
+          }
+        },
+
+        "do_mentor": {
+          "type": "object",
+          "title": "D.O. / CLIA / Mentor Remarks",
+          "properties": {
+            "date":     { "type": "string", "format": "date" },
+            "name":     { "type": "string" },
+            "designation":{ "type": "string" },
+            "standing": { "type": "string" }
+          }
+        },
+
+        "bm_sr_bm": {
+          "type": "object",
+          "title": "ABMS / BM / Sr. BM Remarks",
+          "properties": {
+            "date":       { "type": "string", "format": "date" },
+            "name":       { "type": "string" },
+            "designation":{ "type": "string" }
+          }
+        }
+      }
+    }
+
+  }
+}
