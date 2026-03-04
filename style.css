@@ -1,0 +1,1072 @@
+/* ════════════════════════════════════════════════
+   LIC Proposal Form No. 300 – Stylesheet
+   ════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --lic-primary: #1a3a6b;      /* LIC deep navy */
+  --lic-secondary: #c0392b;    /* LIC red */
+  --lic-gold: #d4a017;
+  --lic-light-blue: #e8eef7;
+  --lic-border: #b0bec5;
+  --lic-section-bg: #f5f7fa;
+  --lic-header-bg: #1a3a6b;
+  --text-dark: #1c1c1c;
+  --text-mid: #444;
+  --text-light: #666;
+  --input-border: #90a4ae;
+  --input-focus: #1565c0;
+  --required-color: #c62828;
+  --row-stripe: #f0f4fb;
+  --font-main: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-main);
+  background: #dde3ed;
+  color: var(--text-dark);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+/* ── Wrapper ── */
+.form-wrapper {
+  max-width: 1100px;
+  margin: 24px auto 48px;
+  background: #fff;
+  border: 1px solid #c5cdd8;
+  border-radius: 6px;
+  box-shadow: 0 4px 24px rgba(26,58,107,0.12);
+  overflow: hidden;
+}
+
+/* ══ HEADER ══ */
+.form-header {
+  background: var(--lic-header-bg);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 24px;
+  border-bottom: 4px solid var(--lic-secondary);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 140px;
+}
+
+.header-logo img {
+  width: 60px;
+  height: auto;
+}
+
+/* LIC badge to mimic scanned header style (left blue block with LIC text) */
+.lic-badge {
+  width: 86px;
+  min-width: 86px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9f4ff; /* pale blue background like the scan */
+  border: 2px solid rgba(26,58,107,0.18);
+  border-radius: 4px;
+  padding: 6px;
+}
+.lic-badge-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lic-emblem {
+  width: 34px;
+  height: 34px;
+  background: #ffd700; /* gold circle */
+  border-radius: 50%;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.06);
+}
+.lic-badge-text {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--lic-primary);
+  letter-spacing: 1px;
+}
+
+/* Slight spacing tweak so the name block aligns like the scan */
+.header-logo .lic-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.lic-name-hindi {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+}
+.lic-name-eng {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: #b8cfef;
+}
+
+.header-center {
+  flex: 1;
+  text-align: center;
+}
+.form-title-hi {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+.form-title-en {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffd700;
+  margin-top: 2px;
+}
+.form-subtitle {
+  font-size: 11px;
+  color: #b0c8ef;
+  margin-top: 4px;
+}
+.form-number-tag {
+  display: inline-block;
+  margin-top: 6px;
+  background: var(--lic-secondary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+/* Photo Box */
+.header-photo-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 110px;
+}
+.photo-label {
+  font-size: 9.5px;
+  text-align: center;
+  color: #cde;
+  line-height: 1.4;
+}
+.photo-upload-area {
+  width: 90px;
+  height: 110px;
+  border: 2px dashed #aac;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background: rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.photo-placeholder {
+  text-align: center;
+  color: #aac;
+  font-size: 11px;
+  padding: 8px;
+  cursor: pointer;
+}
+.photo-sublabel {
+  font-size: 9px;
+  color: #99b;
+  text-align: center;
+}
+
+/* ── Division Bar ── */
+.division-bar {
+  background: var(--lic-light-blue);
+  border-bottom: 1px solid var(--lic-border);
+  padding: 8px 24px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.field-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.field-inline label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lic-primary);
+  white-space: nowrap;
+}
+.field-inline input {
+  border: none;
+  border-bottom: 1.5px solid var(--lic-primary);
+  background: transparent;
+  font-size: 12px;
+  padding: 2px 6px;
+  min-width: 180px;
+  outline: none;
+}
+
+/* ── Instruction Block ── */
+.instruction-block {
+  background: #fffde7;
+  border-left: 5px solid var(--lic-gold);
+  border-bottom: 1px solid #e8dca0;
+  padding: 14px 24px;
+}
+.instruction-block h3 {
+  font-size: 13px;
+  color: var(--lic-primary);
+  margin-bottom: 10px;
+  font-weight: 700;
+  line-height: 1.6;
+  border-bottom: 1px dashed #c8b860;
+  padding-bottom: 6px;
+}
+.instruction-block ol {
+  padding-left: 20px;
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.8;
+}
+.instruction-block ol li {
+  margin-bottom: 7px;
+  padding-left: 4px;
+  /* Each language segment is separated by " / " — show as flowing trilingual text */
+}
+.instruction-note {
+  background: #fff3e0;
+  border: 1px solid #ffe0b2;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #6d4c41;
+  margin-top: 8px;
+}
+
+/* ── Office Use Bar ── */
+.office-use-bar {
+  background: #f3f3f3;
+  border-bottom: 2px solid var(--lic-primary);
+  padding: 10px 24px;
+}
+.office-use-bar h4 {
+  font-size: 12px;
+  color: var(--lic-primary);
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.office-use-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+}
+
+/* ══ AGENT / INTERMEDIARY BOX (Page 1) ══ */
+.agent-box {
+  margin: 0 24px 0 24px;
+  border: 2px solid var(--lic-primary);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.agent-box-title {
+  background: var(--lic-primary);
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.agent-box-title strong { color: #ffd700; }
+.agent-grid {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #f8fbff;
+}
+.agent-field-group {
+  border: 1px solid #c5d4e8;
+  border-radius: 4px;
+  padding: 8px 12px;
+  background: #fff;
+}
+.agent-field-group--row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+}
+.agent-field-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lic-primary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.agent-num {
+  background: var(--lic-secondary);
+  color: #fff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.agent-field-inputs {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.agent-field-inputs .form-group label {
+  font-size: 11px;
+  color: #5c6b8a;
+}
+
+/* ══ SECTIONS ══ */
+.form-section {
+  padding: 20px 24px;
+  border-bottom: 1px solid #dde3ec;
+}
+
+.section-header {
+  background: var(--lic-primary);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+.section-header h2 {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  line-height: 1.5;
+}
+.section-header h2:last-child {
+  color: #b8d0f5;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* Roman numeral badge inside section-header h2 */
+.section-roman {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.22);
+  border-radius: 3px;
+  padding: 1px 8px;
+  margin-right: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+}
+
+/* Standalone Roman numeral sub-heading row (used inside Section I) */
+.pdf-roman-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--lic-primary);
+  color: #fff;
+  padding: 7px 12px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+.pdf-roman-header .roman-num {
+  min-width: 34px;
+  width: 34px;
+  height: 26px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.pdf-roman-header .roman-label {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.subsection-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--lic-primary);
+  background: var(--lic-light-blue);
+  border-left: 4px solid var(--lic-secondary);
+  padding: 6px 10px;
+  margin: 14px 0 10px;
+  border-radius: 0 3px 3px 0;
+}
+
+/* ══ PDF ROW NUMBERING SYSTEM ══
+   Matches the row numbers printed on the physical LIC form.
+   Each field row: [ number badge | label + inputs ]
+   ═══════════════════════════════════════════════════════ */
+.pdf-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  border-bottom: 1px solid #dce5f0;
+  padding: 10px 0 10px 0;
+}
+.pdf-row:last-child { border-bottom: none; }
+
+.pdf-row-num {
+  flex: 0 0 32px;
+  min-width: 32px;
+  height: 24px;
+  background: var(--lic-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  margin-right: 12px;
+  letter-spacing: 0.2px;
+  flex-shrink: 0;
+}
+/* Sub-row badge (a, b, c …) */
+.pdf-row-num--sub {
+  background: var(--lic-secondary);
+  font-size: 10px;
+  height: 20px;
+  width: 24px;
+  min-width: 24px;
+  flex: 0 0 24px;
+  border-radius: 3px;
+  margin-top: 3px;
+  margin-right: 12px;
+}
+
+.pdf-row-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.pdf-row-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lic-primary);
+  margin-bottom: 7px;
+  line-height: 1.5;
+  /* Trilingual text — Marathi / Hindi / English separated by " / " */
+}
+.pdf-row-label strong { color: var(--lic-secondary); }
+.pdf-row-label .label-note {
+  font-size: 11px;
+  font-weight: 400;
+  color: #555;
+  font-style: italic;
+}
+
+.pdf-row-note {
+  font-size: 11px;
+  color: #6d7f99;
+  font-style: italic;
+  margin-top: 4px;
+  padding-left: 2px;
+  border-left: 3px solid var(--lic-gold);
+  padding-left: 6px;
+  background: #fffde7;
+  border-radius: 0 3px 3px 0;
+  padding: 3px 8px;
+  display: inline-block;
+}
+
+/* Sub-alpha rows (a), b), c) …) indented inside a pdf-row */
+.pdf-sub-alpha {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding: 6px 0 4px 0;
+  border-top: 1px dashed #dce5f0;
+  margin-top: 6px;
+}
+.pdf-sub-alpha:first-child { border-top: none; margin-top: 0; }
+
+/* KYC / PEP special badge */
+.pdf-row-num--kyc {
+  background: #6a1b9a;
+  font-size: 9px;
+  height: 20px;
+  min-width: 32px;
+  border-radius: 3px;
+}
+
+/* ── Grid / Rows ── */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-bottom: 10px;
+  align-items: flex-start;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+}
+.col-2  { flex: 0 0 calc(16.66% - 8px); }
+.col-3  { flex: 0 0 calc(25% - 12px); }
+.col-4  { flex: 0 0 calc(33.33% - 12px); }
+.col-5  { flex: 0 0 calc(41.66% - 12px); }
+.col-6  { flex: 0 0 calc(50% - 8px); }
+.col-8  { flex: 0 0 calc(66.66% - 8px); }
+.col-12 { flex: 0 0 100%; }
+
+/* ── Labels ── */
+label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+label.required::after {
+  content: ' *';
+  color: var(--required-color);
+  font-weight: 700;
+}
+
+/* ── Inputs ── */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-family: var(--font-main);
+  border: 1.5px solid var(--input-border);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--text-dark);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(21,101,192,0.12);
+}
+input[readonly] {
+  background: #f5f7fa;
+  color: #777;
+}
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+input[type="file"] {
+  font-size: 12px;
+  padding: 4px 0;
+}
+
+/* Radio & Checkbox Groups */
+.radio-group,
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-top: 4px;
+}
+.radio-group label,
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-dark);
+  font-size: 13px;
+}
+.radio-group input[type="radio"],
+.checkbox-group input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--lic-primary);
+  cursor: pointer;
+}
+
+.help-text {
+  font-size: 11px;
+  color: #5c6b8a;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ── Plan Table ── */
+.plan-table-wrap,
+.existing-insurance-table-wrap {
+  overflow-x: auto;
+  margin: 10px 0;
+}
+.plan-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.plan-table th {
+  background: var(--lic-primary);
+  color: #fff;
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11.5px;
+  border: 1px solid #1a3a6b;
+  white-space: normal;
+}
+.plan-table td {
+  padding: 6px 8px;
+  border: 1px solid #c9d5e8;
+  vertical-align: top;
+}
+.plan-table tbody tr:nth-child(even) {
+  background: var(--row-stripe);
+}
+.plan-table input,
+.plan-table select {
+  font-size: 12px;
+  padding: 5px 6px;
+}
+
+/* ── Riders Grid ── */
+.riders-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 10px 0;
+}
+.rider-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--lic-light-blue);
+  border: 1px solid var(--lic-border);
+  border-radius: 4px;
+  padding: 6px 12px;
+}
+.rider-check input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--lic-secondary);
+}
+
+/* ── Health Questions ── */
+.health-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--lic-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.hq-item {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #d0dce8;
+}
+.hq-item:last-child { border-bottom: none; }
+.hq-text {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 12px;
+  background: #f8fbff;
+  color: var(--text-mid);
+  border-right: 1px solid #d0dce8;
+}
+.hq-answer {
+  min-width: 200px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+}
+.hq-answer label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.hq-details {
+  margin-top: 6px;
+}
+
+/* td.hq-answer — when used as a table cell (MHR / Addendum sections) */
+td.hq-answer {
+  display: table-cell; /* override flex from div.hq-answer */
+  padding: 8px 12px;
+  vertical-align: top;
+  background: #fff;
+}
+td.hq-answer label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 4px;
+  color: var(--text-dark);
+}
+td.hq-answer label:last-child { margin-bottom: 0; }
+td.hq-answer input[type="radio"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--lic-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── Disease Grid ── */
+.disease-grid { margin: 10px 0; }
+.disease-col { width: 100%; }
+.disease-header {
+  background: var(--lic-secondary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 4px 4px 0 0;
+}
+.disease-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid #d5dde8;
+  border-top: none;
+  background: #fff;
+  font-size: 12px;
+  color: var(--text-mid);
+}
+.disease-item:nth-child(even) { background: #f4f7fb; }
+.disease-num {
+  font-weight: 700;
+  color: var(--lic-primary);
+  min-width: 22px;
+}
+.disease-name { flex: 1; line-height: 1.5; }
+.disease-answer {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 100px;
+}
+.disease-answer label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+/* ── Nominee Table ── */
+.sig-box {
+  border: 1.5px dashed #90a4ae;
+  border-radius: 4px;
+  min-height: 48px;
+  min-width: 90px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #90a4ae;
+  text-align: center;
+  padding: 4px;
+}
+.sig-box.large {
+  min-height: 80px;
+  font-size: 12px;
+  min-width: 200px;
+  color: #777;
+}
+
+/* ── Signature Block ── */
+.signature-block {
+  margin: 20px 0;
+  padding: 16px;
+  background: #f5f7fa;
+  border: 1px solid #d0dce8;
+  border-radius: 5px;
+}
+.sig-area {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.sig-date-place {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.witness-block {
+  margin: 14px 0;
+  padding: 14px 16px;
+  border: 1px solid #ccd6e8;
+  border-radius: 4px;
+  background: #fafcff;
+}
+.witness-block p {
+  font-size: 12px;
+  color: var(--text-mid);
+  margin: 8px 0;
+}
+
+/* ── Declaration Text ── */
+.declaration-text {
+  background: #f5f7fa;
+  border: 1px solid #d0dce8;
+  border-radius: 4px;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+.declaration-text p { margin-bottom: 10px; }
+.declaration-text p:last-child { margin-bottom: 0; }
+.declaration-text.small-text { font-size: 11.5px; }
+
+/* ── Existing Insurance Card Layout ── */
+.ei-card {
+  border: 1px solid var(--lic-border);
+  border-radius: 6px;
+  margin-bottom: 14px;
+  background: #f8fbff;
+  overflow: hidden;
+}
+.ei-card-header {
+  background: var(--lic-primary);
+  color: #fff;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.ei-card .form-row {
+  padding: 10px 12px 0;
+}
+.ei-card .form-row:last-child {
+  padding-bottom: 12px;
+}
+.btn-remove-card {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 3px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-remove-card:hover {
+  background: var(--lic-secondary);
+  border-color: var(--lic-secondary);
+}
+
+/* ── Section 8: Plan Category Selection Grid ── */
+.plan-sel-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid #aac;
+  overflow: hidden;
+  margin-bottom: 0;
+  font-size: 11px;
+}
+.plan-sel-col {
+  border-right: 1px solid #aac;
+  display: flex;
+  flex-direction: column;
+}
+.plan-sel-col:last-child { border-right: none; }
+.plan-sel-header {
+  background: var(--lic-primary);
+  color: #fff;
+  padding: 7px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.45;
+  border-bottom: 1px solid #aac;
+}
+.plan-sel-profile {
+  background: #d6e4f0;
+  color: #1a3c6e;
+  padding: 4px 6px;
+  font-size: 9.5px;
+  font-style: italic;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid #aac;
+}
+.plan-sel-items { flex: 1; }
+.plan-sel-item { position: relative; }
+.plan-sel-item input[type="radio"] { display: none; }
+.plan-sel-item label {
+  display: block;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #e5ebf5;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1.35;
+}
+.plan-sel-item label:hover { background: #e3ecf7; }
+.plan-sel-item input[type="radio"]:checked + label {
+  background: var(--lic-primary);
+  color: #fff;
+}
+.plan-sel-item .plan-local {
+  font-size: 9.5px;
+  color: #667799;
+  display: block;
+  margin-bottom: 1px;
+}
+.plan-sel-item input[type="radio"]:checked + label .plan-local {
+  color: rgba(255,255,255,0.75);
+}
+.plan-sel-item label strong { font-size: 11px; }
+.plan-sel-hint {
+  font-size: 10.5px;
+  color: #667;
+  font-style: italic;
+  padding: 5px 10px 6px;
+  border: 1px solid #aac;
+  border-top: none;
+  background: #f7f9fc;
+}
+
+/* ── Add Row Button ── */
+.btn-add-row {
+  margin-top: 6px;
+  background: var(--lic-light-blue);
+  color: var(--lic-primary);
+  border: 1.5px solid var(--lic-primary);
+  border-radius: 4px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-add-row:hover { background: #c5d6ef; }
+
+/* ── Form Actions ── */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 20px 24px;
+  background: var(--lic-light-blue);
+  border-top: 2px solid var(--lic-primary);
+}
+.btn-primary,
+.btn-secondary {
+  padding: 10px 28px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn-primary {
+  background: var(--lic-secondary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(192,57,43,0.25);
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-secondary {
+  background: #fff;
+  color: var(--lic-primary);
+  border: 2px solid var(--lic-primary);
+}
+.btn-secondary:hover { background: var(--lic-light-blue); }
+
+/* ══ PRINT STYLES ══ */
+@media print {
+  body { background: #fff; font-size: 11px; }
+  .form-wrapper { box-shadow: none; border: none; max-width: 100%; margin: 0; }
+  .form-actions { display: none; }
+  .btn-add-row { display: none; }
+  .form-section { page-break-inside: avoid; }
+  .section-header { background: #000 !important; -webkit-print-color-adjust: exact; }
+  .plan-table th { background: #000 !important; -webkit-print-color-adjust: exact; }
+  input, select, textarea {
+    border: 1px solid #999;
+    border-radius: 0;
+  }
+}
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 768px) {
+  .form-header { flex-wrap: wrap; }
+  .col-2, .col-3, .col-4, .col-5, .col-6, .col-8 { flex: 0 0 100%; }
+  .plan-table { font-size: 11px; }
+  .hq-item { flex-direction: column; }
+  .hq-answer { min-width: unset; border-top: 1px solid #d0dce8; }
+}
+
+/* Scroll indicator for tables */
+.plan-table-wrap::after,
+.existing-insurance-table-wrap::after {
+  content: '← scroll →';
+  display: block;
+  font-size: 10px;
+  color: #90a4ae;
+  text-align: center;
+  padding: 2px 0;
+}
+@media (min-width: 900px) {
+  .plan-table-wrap::after,
+  .existing-insurance-table-wrap::after { display: none; }
+}
