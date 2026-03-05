@@ -594,3 +594,593 @@ function addFHChildRow() {
     '</td>';
   btnRow.parentNode.insertBefore(tr, btnRow);
 }
+
+/* ════════════════════════════════════════════════
+   fillFromJson(data)
+   Auto-populate the entire form from a JSON object
+   matching schema.json.  Call this after PDF parsing:
+     fillFromJson(parsedJsonFromPdf);
+   ════════════════════════════════════════════════ */
+function fillFromJson(data) {
+  if (!data) return;
+
+  /* ── Internal helpers ────────────────────────── */
+  function v(selector, val) {
+    if (val == null || val === '') return;
+    var el = document.querySelector(selector);
+    if (el) el.value = val;
+  }
+  function byId(id, val)   { v('#' + id, val); }
+  function byName(nm, val) { v('[name="' + nm + '"]', val); }
+
+  // Set a radio by name+value and fire change to trigger conditional logic
+  function radio(name, val) {
+    if (val == null) return;
+    var el = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
+    if (el) { el.checked = true; el.dispatchEvent(new Event('change', {bubbles: true})); }
+  }
+  // Boolean → Y/N radio
+  function yn(name, boolVal) {
+    if (boolVal == null) return;
+    radio(name, boolVal ? 'Y' : 'N');
+  }
+  // Checkbox by name
+  function check(nm, boolVal) {
+    if (boolVal == null) return;
+    var el = document.querySelector('input[name="' + nm + '"]');
+    if (el) el.checked = !!boolVal;
+  }
+  // Checkbox by id
+  function checkId(id, boolVal) {
+    if (boolVal == null) return;
+    var el = document.getElementById(id);
+    if (el) el.checked = !!boolVal;
+  }
+  // Select – exact match first, then partial text match for multilingual options
+  function matchSelect(el, val) {
+    if (!el || val == null) return;
+    var opts = Array.from(el.options);
+    var lc   = String(val).toLowerCase();
+    var opt  = opts.find(function(o) { return o.value === String(val); });
+    if (!opt) opt = opts.find(function(o) { return o.text  === String(val); });
+    if (!opt) opt = opts.find(function(o) { return o.text.toLowerCase().includes(lc) || o.value.toLowerCase().includes(lc); });
+    if (opt) el.value = opt.value;
+  }
+  function sel(name, val) {
+    var el = document.querySelector('[name="' + name + '"]');
+    if (!el) return;
+    matchSelect(el, val);
+    el.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+  function selId(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    matchSelect(el, val);
+    el.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+  // Safe nested access without throwing
+  function g(obj) {
+    var result = obj;
+    for (var i = 1; i < arguments.length; i++) {
+      if (result == null) return undefined;
+      result = result[arguments[i]];
+    }
+    return result;
+  }
+
+  /* ── Office Use ─────────────────────────────── */
+  var ou = g(data, 'office_use');
+  if (ou) {
+    byName('inward_no',        ou.inward_no);
+    byName('proposal_no',      ou.proposal_no);
+    byName('ou_date',          ou.date);
+    byName('date_of_proposal', ou.date_of_proposal);
+    byName('date_of_deposit',  ou.date_of_deposit);
+    byName('boc_no',           ou.boc_no);
+    byName('amt_of_deposit',   ou.amt_of_deposit);
+  }
+
+  /* ── Section I – Personal Details ───────────── */
+  var si = g(data, 'section_i');
+  if (si) {
+    byId('customer_id', si.customer_id);
+    byId('kyc_number',  si.kyc_number);
+    var nm = si.name || {};
+    selId('name_prefix', nm.prefix);
+    byId('first_name',   nm.first_name);
+    byId('middle_name',  nm.middle_name);
+    byId('last_name',    nm.last_name);
+    byId('father_name', si.father_name);
+    byId('mother_name', si.mother_name);
+    if (si.gender)         radio('gender', si.gender);
+    if (si.marital_status) selId('marital_status', si.marital_status);
+    byId('spouse_name',  si.spouse_name);
+    if (si.date_of_birth) {
+      byId('dob', si.date_of_birth);
+      var dobEl = document.getElementById('dob');
+      if (dobEl) dobEl.dispatchEvent(new Event('change', {bubbles: true}));
+    }
+    byId('place_of_birth', si.place_of_birth);
+    selId('age_proof',     si.age_proof);
+    byId('nationality',    si.nationality);
+    byId('citizenship',    si.citizenship);
+    var pa = si.permanent_address || {};
+    byId('perm_house', pa.house);
+    byId('perm_town',  pa.town);
+    byId('perm_city',  pa.city);
+    byId('perm_state', pa.state);
+    byId('perm_pin',   pa.pin);
+    byId('perm_tel',   pa.tel);
+    if (si.correspondence_address_same_as_permanent != null)
+      radio('corr_same', si.correspondence_address_same_as_permanent ? 'Y' : 'N');
+    var ca = si.correspondence_address || {};
+    byName('corr_house', ca.house);
+    byName('corr_town',  ca.town);
+    byName('corr_city',  ca.city);
+    byName('corr_state', ca.state);
+    byName('corr_pin',   ca.pin);
+    byName('corr_tel',   ca.tel);
+    if (si.residential_status) radio('residential_status', si.residential_status);
+    if (si.oci_card != null)   yn('oci_card', si.oci_card);
+    byName('la_mobile', si.mobile);
+    byName('la_email',  si.email);
+    var kyc = si.kyc_pmla || {};
+    if (kyc.income_tax_assessee != null) yn('income_tax_assessee', kyc.income_tax_assessee);
+    byId('pan', kyc.pan);
+    if (kyc.gstn_registered != null) radio('gstn_registered', kyc.gstn_registered ? 'Y' : 'N');
+    byId('gstin', kyc.gstin);
+    if (kyc.id_proof_type) radio('kyc_id_type', kyc.id_proof_type);
+    byId('id_number', kyc.id_number);
+    byId('id_expiry', kyc.id_expiry);
+    byId('corr_proof', kyc.corr_proof);
+    var occ = si.occupation || {};
+    byId('educational_qualification', occ.educational_qualification);
+    byId('present_occupation',        occ.present_occupation);
+    selId('source_of_income',         occ.source_of_income);
+    byId('employer_name',             occ.employer_name);
+    byId('nature_of_duties',          occ.nature_of_duties);
+    byId('length_of_service',         occ.length_of_service);
+    byId('annual_income',             occ.annual_income);
+    if (occ.hazardous_occupation != null) yn('hazardous_occ', occ.hazardous_occupation);
+    if (occ.criminal_record != null)      yn('criminal_record', occ.criminal_record);
+    if (occ.pep != null)                  yn('pep', occ.pep);
+    var af = si.armed_forces || {};
+    if (af.in_armed_forces != null) yn('armed_forces', af.in_armed_forces);
+    var tr = si.tax_residency || {};
+    if (tr.tax_resident_outside_india != null) yn('tax_outside_india', tr.tax_resident_outside_india);
+    var bk = si.bank_details || {};
+    selId('bank_account_type', bk.account_type);
+    byId('bank_account_no',    bk.account_number);
+    byId('bank_micr',          bk.micr_code);
+    byId('bank_ifsc',          bk.ifsc_code);
+    byId('bank_name_address',  bk.bank_name_address);
+  }
+
+  /* ── Section II – Proposed Plan Details ─────── */
+  var sii = g(data, 'section_ii');
+  if (sii) {
+    if (sii.objective_of_insurance) radio('obj_insurance', sii.objective_of_insurance);
+    if (sii.proposal_under)         radio('proposal_under', sii.proposal_under);
+    var pl = sii.plan || {};
+    byName('plan_name',        pl.plan_name);
+    byName('plan_no',          pl.plan_no);
+    byName('policy_term',      pl.policy_term);
+    byName('sum_assured',      pl.sum_assured);
+    sel('premium_mode',        pl.premium_mode);
+    byName('premium_amount',   pl.premium_amount);
+    byName('policy_date_back', pl.policy_date_back);
+    var rd = sii.riders || {};
+    check('rider_term', rd.term_assurance_rider);
+    byName('term_rider_sa', rd.term_assurance_rider_sa);
+    check('rider_ci',   rd.critical_illness_rider);
+    byName('ci_benefit', rd.critical_illness_rider_sa);
+    if (rd.pwb_rider != null) {
+      check('rider_pwb', rd.pwb_rider);
+      if (rd.pwb_rider) {
+        var pwbEl = document.getElementById('riderPWB');
+        if (pwbEl) pwbEl.dispatchEvent(new Event('change', {bubbles: true}));
+      }
+    }
+    check('rider_ab',  rd.accident_benefit_rider);
+    check('rider_adb', rd.addb_rider);
+    byName('accident_benefit', rd.accident_benefit_sa || rd.addb_rider_sa);
+    var pp = sii.police_personnel || {};
+    if (pp.is_police != null)     yn('police_duty',      pp.is_police);
+    if (pp.on_duty_rider != null) yn('police_rider_duty', pp.on_duty_rider);
+    var sss = sii.sss_details || {};
+    byId('sss_authority', sss.authority);
+    byId('sss_badge',     sss.badge_no);
+    if (sii.pwb_agreement != null)              yn('pwb_agree',         sii.pwb_agreement);
+    var sp = sii.simultaneous_proposals || {};
+    if (sp.any_pending != null)     yn('simultaneous_pending', sp.any_pending);
+    if (sp.spouse_proposal != null) yn('simultaneous_spouse',  sp.spouse_proposal);
+    if (sii.lic_portal_registered != null)      yn('lic_portal',         sii.lic_portal_registered);
+    if (sii.settlement_option_maturity != null) yn('settlement_maturity', sii.settlement_option_maturity);
+    if (sii.settlement_option_death != null)    yn('settlement_death',    sii.settlement_option_death);
+  }
+
+  /* ── Section III – Health & Family ──────────── */
+  var siii = g(data, 'section_iii');
+  if (siii) {
+    var ph = siii.personal_health || {};
+    byId('height', ph.height_cm);
+    byId('weight', ph.weight_kg);
+    if (ph.medical_consultation_5yrs != null) yn('hq_b', ph.medical_consultation_5yrs);
+    if (ph.hospital_admission != null)        yn('hq_c', ph.hospital_admission);
+    if (ph.absence_from_work != null)         yn('hq_d', ph.absence_from_work);
+    var dis = ph.diseases || {};
+    var disMap = [
+      ['dis_1',  'lungs_respiratory'],  ['dis_2',  'hypertension'],
+      ['dis_3',  'digestive'],          ['dis_4',  'kidney_urinary'],
+      ['dis_5',  'neurological'],       ['dis_6',  'hernia_venereal'],
+      ['dis_7',  'cancer'],             ['dis_8',  'eyes_ent'],
+      ['dis_9',  'diabetes_endocrine'], ['dis_10', 'bone_joint'],
+      ['dis_11', 'mental'],             ['dis_12', 'infectious'],
+      ['dis_13', 'hepatitis_aids'],     ['dis_14', 'operations_injuries'],
+      ['dis_15', 'other']
+    ];
+    disMap.forEach(function(pair) { if (dis[pair[1]] != null) yn(pair[0], dis[pair[1]]); });
+    var anyDisYes = disMap.some(function(pair) { return dis[pair[1]]; });
+    if (anyDisYes) {
+      var ddBlock = document.getElementById('diseaseDetailsBlock');
+      if (ddBlock) ddBlock.style.display = 'block';
+    }
+    var ddArr  = ph.disease_details || [];
+    var ddBody = document.getElementById('diseaseDetailsBody');
+    if (ddBody && ddArr.length) {
+      ddBody.innerHTML = '';
+      ddArr.forEach(function(dd) {
+        addDiseaseRow();
+        var rows = ddBody.querySelectorAll('tr');
+        var row  = rows[rows.length - 1];
+        var rv = function(s, val) { var el = row.querySelector(s); if (el && val != null) el.value = val; };
+        rv('[name="dd_nature[]"]',    dd.nature);
+        rv('[name="dd_date[]"]',      dd.date);
+        rv('[name="dd_recovered[]"]', dd.recovered);
+        rv('[name="dd_treatment[]"]', dd.treatment);
+        rv('[name="dd_doctor[]"]',    dd.doctor_name);
+      });
+    }
+    var hb = siii.personal_habits || {};
+    if (hb.alcohol != null)     yn('habit_alcohol', hb.alcohol);
+    byName('habit_alcohol_qty',       hb.alcohol_qty);
+    byName('habit_alcohol_stopped',   hb.alcohol_stopped);
+    if (hb.narcotics != null)   yn('habit_narcotics', hb.narcotics);
+    byName('habit_narcotics_qty',     hb.narcotics_qty);
+    byName('habit_narcotics_stopped', hb.narcotics_stopped);
+    if (hb.other_drugs != null) yn('habit_other_drugs', hb.other_drugs);
+    byName('habit_other_drugs_qty',     hb.other_drugs_qty);
+    byName('habit_other_drugs_stopped', hb.other_drugs_stopped);
+    if (hb.tobacco != null)     yn('habit_tobacco', hb.tobacco);
+    byName('habit_tobacco_qty',     hb.tobacco_qty);
+    byName('habit_tobacco_stopped', hb.tobacco_stopped);
+    sel('health_state', siii.present_health_state);
+    var fh = siii.family_health || {};
+    if (fh.any_hereditary_disease != null) yn('family_disease', fh.any_hereditary_disease);
+    var fhFather = fh.father || {};
+    byName('fh_father_liv_age',    fhFather.age_if_alive);
+    byName('fh_father_liv_health', fhFather.health);
+    byName('fh_father_dead_age',   fhFather.age_at_death);
+    byName('fh_father_dead_cause', fhFather.cause_of_death);
+    var fhMother = fh.mother || {};
+    byName('fh_mother_liv_age',    fhMother.age_if_alive);
+    byName('fh_mother_liv_health', fhMother.health);
+    byName('fh_mother_dead_age',   fhMother.age_at_death);
+    byName('fh_mother_dead_cause', fhMother.cause_of_death);
+    var fhSpouse = fh.spouse || {};
+    byName('fh_spouse_liv_age',    fhSpouse.age_if_alive);
+    byName('fh_spouse_liv_health', fhSpouse.health);
+    byName('fh_spouse_dead_age',   fhSpouse.age_at_death);
+    byName('fh_spouse_dead_cause', fhSpouse.cause_of_death);
+  }
+
+  /* ── Section IV – Declaration & Nominees ────── */
+  var siv = g(data, 'section_iv');
+  if (siv) {
+    var eiCont   = document.getElementById('existingInsuranceBody');
+    var policies = g(siv, 'existing_insurance', 'policies') || [];
+    if (eiCont && policies.length) {
+      eiCont.innerHTML = '';
+      policies.forEach(function(p) {
+        addInsuranceRow();
+        var cards = eiCont.querySelectorAll('.ei-card');
+        var card  = cards[cards.length - 1];
+        var cv = function(s, val) { var el = card.querySelector(s); if (el && val != null) el.value = val; };
+        var cs = function(s, val) { var el = card.querySelector(s); matchSelect(el, val); };
+        cv('[name="ei_policy_no[]"]',     p.policy_no);
+        cv('[name="ei_insurer[]"]',       p.insurer);
+        cv('[name="ei_plan[]"]',          p.plan_name);
+        cv('[name="ei_sa[]"]',            p.sum_assured);
+        cv('[name="ei_term_rider_sa[]"]', p.term_rider_sa);
+        cv('[name="ei_ci_rider_sa[]"]',   p.ci_rider_sa);
+        cv('[name="ei_ab_addb_sa[]"]',    p.ab_addb_sa);
+        cv('[name="ei_commencement[]"]',  p.commencement_date);
+        cv('[name="ei_revival[]"]',       p.revival_date);
+        cs('[name="ei_accepted[]"]',      p.accepted);
+        cv('[name="ei_accepted_details[]"]', p.accepted_details);
+        cs('[name="ei_medical[]"]',       p.medical_type);
+        cs('[name="ei_inforce[]"]',       p.inforce);
+        cv('[name="ei_fup_surrender[]"]', p.fup_surrender_date);
+      });
+    }
+    var ei = siv.existing_insurance || {};
+    if (ei.q14a_proposals_declined != null) yn('ei_q14a', ei.q14a_proposals_declined);
+    if (ei.q14b_policy_lapsed != null)      yn('ei_q14b', ei.q14b_policy_lapsed);
+    if (ei.q14c_policy_assignment != null)  yn('ei_q14c', ei.q14c_policy_assignment);
+    if (ei.q14d_other_proposals != null)    yn('ei_q14d', ei.q14d_other_proposals);
+    var nomCont = document.getElementById('nomineeBody');
+    var noms    = g(siv, 'nominee', 'nominees') || [];
+    if (nomCont && noms.length) {
+      nomCont.innerHTML = '';
+      var nomType = g(siv, 'nominee', 'nomination_type');
+      if (nomType) radio('nom_type', nomType);
+      noms.forEach(function(nom) {
+        addNomineeRow();
+        var cards = nomCont.querySelectorAll('.ei-card');
+        var card  = cards[cards.length - 1];
+        var cv = function(s, val) { var el = card.querySelector(s); if (el && val != null) el.value = val; };
+        var cs = function(s, val) { var el = card.querySelector(s); matchSelect(el, val); };
+        cv('[name="nom_name[]"]',      nom.name);
+        cv('[name="nom_share[]"]',     nom.share_percent);
+        cv('[name="nom_age[]"]',       nom.age);
+        cv('[name="nom_rel[]"]',       nom.relationship);
+        cv('[name="nom_appointee[]"]', nom.appointee_name);
+        cv('[name="nom_app_rel[]"]',   nom.appointee_rel);
+        cs('[name="nom_id_type[]"]',   nom.id_type);
+        cv('[name="nom_id_number[]"]', nom.id_number);
+      });
+    }
+    var decl = siv.declaration || {};
+    byName('decl_la_name',    decl.la_name);
+    byName('decl_la_name_hi', decl.la_name);
+    byName('decl_dated_at',   decl.place);
+    if (decl.date) {
+      var dp = decl.date.split('-');
+      if (dp.length === 3) {
+        byName('decl_day',      dp[2]);
+        byName('decl_month_en', dp[1]);
+        byName('decl_year_en',  dp[0]);
+        byName('decl_tarikh',   dp[2]);
+        byName('decl_maah',     dp[1]);
+        byName('decl_year_hi',  dp[0]);
+        byName('decl_roji',     dp[2]);
+        byName('decl_year_mr',  dp[0]);
+      }
+    }
+    var wit = siv.witness || {};
+    byName('witness_name',         wit.name);
+    byName('witness_occupation',   wit.occupation);
+    byName('witness_address_main', wit.address);
+  }
+
+  /* ── Addendum 1 – Settlement Option (Maturity) ─ */
+  var add1 = g(data, 'addendum_1_settlement_maturity');
+  if (add1) {
+    byName('add1_proposal_no', add1.proposal_no);
+    if (add1.avail_option != null) radio('add1_avail', add1.avail_option ? 'yes' : 'no');
+    if (add1.period_years)         radio('add1_period', String(add1.period_years));
+    if (add1.benefit_type)         radio('add1_benefit_type', add1.benefit_type.toLowerCase());
+    byName('add1_abs_amt', add1.partial_amount);
+    byName('add1_pct',     add1.partial_percent);
+    if (add1.payment_mode)         radio('add1_mode', add1.payment_mode.toLowerCase().replace('-', ''));
+    byName('add1_place',    add1.place);
+    byName('add1_date',     add1.date);
+    byName('add1_lba_name', add1.lba_name);
+  }
+
+  /* ── Addendum 2 – Death Benefit Instalments ──── */
+  var add2 = g(data, 'addendum_2_death_benefit_instalments');
+  if (add2) {
+    byName('add2_proposal_no', add2.proposal_no);
+    if (add2.avail_option != null) radio('add2_avail', add2.avail_option ? 'yes' : 'no');
+    if (add2.period_years)         radio('add2_period', String(add2.period_years));
+    if (add2.benefit_type)         radio('add2_benefit_type', add2.benefit_type.toLowerCase());
+    byName('add2_abs_amt', add2.partial_amount);
+    byName('add2_pct',     add2.partial_percent);
+    if (add2.payment_mode)         radio('add2_mode', add2.payment_mode.toLowerCase().replace('-', ''));
+    byName('add2_place',    add2.place);
+    byName('add2_date',     add2.date);
+    byName('add2_lba_name', add2.lba_name);
+  }
+
+  /* ── Addendum – Plan-Specific Details ────────── */
+  var aps = g(data, 'addendum_plan_specific');
+  if (aps) {
+    var ds = aps.dhan_sanchay_865 || {};
+    if (ds.benefit_option) radio('ps_benefit_opt', ds.benefit_option);
+    if (ds.payout_modes && ds.payout_modes.indexOf('Yearly') > -1) check('ps_payout_yearly', true);
+    var ja = aps.jeevan_azad_868 || {};
+    byName('ps_azad_bsa', ja.existing_bsa);
+    if (ja.simultaneous != null) radio('ps_azad_simul', ja.simultaneous ? 'yes' : 'no');
+    byName('ps_azad_simul_details', ja.simul_details);
+    var dv = aps.dhan_vriddhi_869 || {};
+    if (dv.death_benefit_option) radio('ps_vriddhi_opt', String(dv.death_benefit_option));
+    var jk = aps.jeevan_kiran_870 || {};
+    if (jk.category) radio('ps_kiran_category', jk.category.toLowerCase());
+    var ju = aps.jeevan_utsav_871 || {};
+    if (ju.benefit_option) radio('ps_utsav_opt', String(ju.benefit_option));
+    var aas = aps.aadhar_stambh_shila_943_944 || {};
+    byName('ps_aadhar_bsa', aas.existing_sa);
+    if (aas.simultaneous != null) radio('ps_aadhar_simul', aas.simultaneous ? 'yes' : 'no');
+    byName('ps_aadhar_simul_details', aas.simul_details);
+    var nja = aps.new_jeevan_amar_955 || {};
+    if (nja.category) radio('ps_amar_category', nja.category.toLowerCase());
+    if (nja.death_benefit_option) radio('ps_amar_death_opt', nja.death_benefit_option.indexOf('II') > -1 ? 'II' : 'I');
+    byName('ps_place_date',     aps.place);
+    byName('ps_place_date_p19', aps.place);
+  }
+
+  /* ── Moral Hazard Report ─────────────────────── */
+  var mhr = g(data, 'moral_hazard_report');
+  if (mhr) {
+    var mhrA = mhr.agent || {};
+    byName('mhr_agent_name',    mhrA.name);
+    byName('mhr_agent_code',    mhrA.code);
+    byName('mhr_agent_mobile',  mhrA.mobile);
+    byName('mhr_agent_club',    mhrA.club_status);
+    byName('mhr_agent_license', mhrA.licence_no);
+    byName('mhr_agent_expiry',  mhrA.licence_expiry);
+    var mhrDo = mhr.do || {};
+    byName('mhr_do_name',   mhrDo.name);
+    byName('mhr_do_code',   mhrDo.code);
+    byName('mhr_do_mobile', mhrDo.mobile);
+    var m1 = mhr.section_i_product || {};
+    byName('mhr_1a', m1.proposer_name);
+    byName('mhr_1b', m1.age);
+    byName('mhr_1c', m1.plan_and_term);
+    byName('mhr_1d', m1.sum_assured);
+    if (m1.plan_explained             != null) yn('mhr_1e', m1.plan_explained);
+    if (m1.plan_suitable              != null) yn('mhr_1f', m1.plan_suitable);
+    if (m1.benefit_illustration_given != null) yn('mhr_1g', m1.benefit_illustration_given);
+    var m2 = mhr.section_ii_proposer || {};
+    byName('mhr_2a', m2.acquaintance_duration);
+    if (m2.is_relative        != null) yn('mhr_2b', m2.is_relative);
+    byName('mhr_2c', m2.relative_details);
+    byName('mhr_2d', m2.education);
+    if (m2.is_fnio_oci        != null) yn('mhr_2e', m2.is_fnio_oci);
+    if (m2.is_pep             != null) yn('mhr_2f', m2.is_pep);
+    if (m2.kyc_pmla_complied  != null) yn('mhr_2g', m2.kyc_pmla_complied);
+    var m3 = mhr.section_iii_financial || {};
+    byName('mhr_3a', m3.income_source);
+    byName('mhr_3b', m3.employment);
+    byName('mhr_3c', m3.huf);
+    byName('mhr_3d', m3.other_sources);
+    var proofs = m3.income_proofs || [];
+    check('mhr_3e_itr',    proofs.indexOf('ITR')            > -1);
+    check('mhr_3e_bank',   proofs.indexOf('Bank Statement') > -1);
+    check('mhr_3e_salary', proofs.indexOf('Salary Slip')    > -1);
+    check('mhr_3e_ca',     proofs.indexOf('CA Certificate') > -1);
+    byName('mhr_3f', m3.pan_verified);
+    if (m3.financially_sound != null) yn('mhr_3g', m3.financially_sound);
+    var m4 = mhr.section_iv_previous_insurance || {};
+    if (m4.has_previous_policy      != null) yn('mhr_4a', m4.has_previous_policy);
+    if (m4.declined_deferred_before != null) yn('mhr_4b', m4.declined_deferred_before);
+    var m5 = mhr.section_v_health || {};
+    byName('mhr_5a', m5.health_status);
+    if (m5.physical_mental_defects  != null) yn('mhr_5b', m5.physical_mental_defects);
+    if (m5.illness_injury_operation != null) yn('mhr_5c', m5.illness_injury_operation);
+    byName('mhr_5d', m5.height);
+    byName('mhr_5e', m5.weight);
+    if (m5.adverse_risk_factors     != null) yn('mhr_5f', m5.adverse_risk_factors);
+    byName('mhr_5g', m5.other_observations);
+    var mhrSig = mhr.agent_signature || {};
+    byName('mhr_agent_place', mhrSig.place);
+    byId('mhr_agent_date',    mhrSig.date);
+    var mhrDom = mhr.do_mentor || {};
+    byId('mhr_do_date',       mhrDom.date);
+    byName('mhr_do_name2',    mhrDom.name);
+    byName('mhr_do_desig',    mhrDom.designation);
+    byName('mhr_do_standing', mhrDom.standing);
+    var mhrBm = mhr.bm_sr_bm || {};
+    byId('mhr_bm_date',    mhrBm.date);
+    byName('mhr_bm_name',  mhrBm.name);
+    byName('mhr_bm_desig', mhrBm.designation);
+  }
+
+  /* ── Insurance Suitability Questionnaire ────── */
+  var isq = g(data, 'insurance_suitability_questionnaire');
+  if (isq) {
+    var s10    = isq.section_10 || {};
+    var agDecl = s10.agent_declaration || {};
+    byName('sa_agent_decl_name_mr', agDecl.agent_name_mr);
+    byName('sa_agent_decl_name_hi', agDecl.agent_name_hi);
+    byName('sa_agent_decl_name_en', agDecl.agent_name_en);
+    byName('sa_agent_decl_place',   agDecl.place);
+    byName('sa_agent_decl_date',    agDecl.date);
+    var prDecl = s10.proposer_declaration || {};
+    byName('sa_prop_decl_name_mr', prDecl.proposer_name_mr);
+    byName('sa_prop_decl_name_hi', prDecl.proposer_name_hi);
+    byName('sa_prop_decl_name_en', prDecl.proposer_name_en);
+    var pref = prDecl.preferred_plan || {};
+    byName('sa_prop_table_no',  pref.table_no);
+    byName('sa_prop_plan_name', pref.plan_name);
+    byName('sa_prop_term',      pref.term);
+    byName('sa_prop_sa',        pref.sum_assured);
+    byName('sa_prop_mode',      pref.mode);
+    byName('sa_prop_premium',   pref.premium);
+    byName('sa_prop_decl_place', prDecl.place);
+    byName('sa_prop_decl_date',  prDecl.date);
+    var wv = isq.waiver || {};
+    if (wv.waiver_opted != null) checkId('sa_waiver_opted', wv.waiver_opted);
+    byName('sa_waiver_place', wv.place);
+    byName('sa_waiver_date',  wv.date);
+  }
+
+  /* ── Annexure I (items 1–9, sa_* fields) ────── */
+  var ai = g(data, 'annexure_i');
+  if (ai) {
+    var ai1 = ai.item_1_proposer || {};
+    byName('sa_proposer_name', ai1.proposer_name);
+    byName('sa_dob_dd',        ai1.dob_dd);
+    byName('sa_dob_mm',        ai1.dob_mm);
+    byName('sa_dob_yyyy',      ai1.dob_yyyy);
+    byName('sa_age',           ai1.age);
+    byName('sa_age_yr',        ai1.age_yr);
+    byName('sa_address',       ai1.address);
+    if (ai1.marital_status) radio('sa_marital', ai1.marital_status);
+    var ai2 = ai.item_2_occupation || {};
+    if (ai2.occupation) radio('sa_occupation', ai2.occupation);
+    byName('sa_occupation_other', ai2.occupation_other);
+    var ai3 = ai.item_3_income || {};
+    byName('sa_income_emp',   ai3.income_employment);
+    byName('sa_income_biz',   ai3.income_business);
+    byName('sa_income_other', ai3.income_other);
+    byName('sa_income_huf',   ai3.income_huf);
+    byName('sa_income_lba',   ai3.income_lba);
+    if (ai3.income_proof_submitted != null) radio('sa_income_proof', ai3.income_proof_submitted ? 'yes' : 'no');
+    check('sa_doc_itr',      ai3.doc_itr);
+    check('sa_doc_salary',   ai3.doc_salary);
+    check('sa_doc_ca',       ai3.doc_ca);
+    check('sa_doc_pl',       ai3.doc_pl);
+    check('sa_doc_property', ai3.doc_property);
+    check('sa_doc_others',   ai3.doc_others);
+    if (ai3.tax_assessee != null) radio('sa_tax_assessee', ai3.tax_assessee ? 'yes' : 'no');
+    byName('sa_tax_ifyes_detail', ai3.tax_detail);
+    byName('sa_pan',              ai3.pan);
+    byName('sa_tax_bracket',      ai3.tax_bracket);
+    var ai5 = ai.item_5_family_history || {};
+    byName('sa_fh_father_age',       ai5.father_age);
+    byName('sa_fh_father_health',    ai5.father_health);
+    byName('sa_fh_father_death_age', ai5.father_death_age);
+    byName('sa_fh_father_cause',     ai5.father_cause);
+    byName('sa_fh_mother_age',       ai5.mother_age);
+    byName('sa_fh_mother_health',    ai5.mother_health);
+    byName('sa_fh_mother_death_age', ai5.mother_death_age);
+    byName('sa_fh_mother_cause',     ai5.mother_cause);
+    var ai5a = ai.item_5a_spouse || {};
+    byName('sa_spouse_name',   ai5a.spouse_name);
+    byName('sa_spouse_occ',    ai5a.spouse_occ);
+    byName('sa_spouse_income', ai5a.spouse_income);
+    var ai6 = ai.item_6_need_analysis || {};
+    byName('sa_na_total_income', ai6.total_income);
+    byName('sa_na_liabilities',  ai6.liabilities);
+    byName('sa_na_secured',      ai6.secured_income);
+    byName('sa_na_unsecured',    ai6.unsecured);
+    byName('sa_max_insurance',   ai6.max_insurance);
+    var ai7 = ai.item_7_objectives || {};
+    check('sa_obj_purerisks', ai7.obj_pure_risk);
+    check('sa_obj_savings',   ai7.obj_savings);
+    check('sa_obj_moneyback', ai7.obj_money_back);
+    check('sa_obj_secured',   ai7.obj_secured);
+    check('sa_obj_market',    ai7.obj_market);
+    check('sa_obj_pension',   ai7.obj_pension);
+    check('sa_obj_health',    ai7.obj_health);
+    check('sa_obj_children',  ai7.obj_children);
+    check('sa_obj_others',    ai7.obj_others);
+    if (ai7.risk_profile)         radio('sa_risk_profile', ai7.risk_profile);
+    if (ai7.premium_mode)         radio('sa_prem_mode',    ai7.premium_mode);
+    if (ai7.time_frame)           radio('sa_timeframe',    ai7.time_frame);
+    byName('sa_timeframe_other',  ai7.time_frame_other);
+    var ai8 = ai.item_8_plan_category || {};
+    if (ai8.plan_category) radio('sa_plan_category', ai8.plan_category);
+    var ai9 = ai.item_9_product_chosen || {};
+    byName('sa_prop_table_no',  ai9.table_no);
+    byName('sa_prop_plan_name', ai9.plan_name);
+    byName('sa_prop_term',      ai9.term);
+    byName('sa_prop_sa',        ai9.sum_assured);
+    byName('sa_prop_mode',      ai9.mode);
+    byName('sa_prop_premium',   ai9.premium);
+  }
+
+  console.log('[fillFromJson] Form populated successfully.');
+}

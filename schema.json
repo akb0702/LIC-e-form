@@ -759,6 +759,226 @@
       }
     },
 
+    "annexure_i": {
+      "type": "object",
+      "title": "Annexure I – Insurance Suitability Questionnaire (Items 1–9)",
+      "description": "Maps to sa_* named HTML inputs in the Annexure I section of the form",
+      "properties": {
+
+        "item_1_proposer": {
+          "type": "object",
+          "title": "Item 1 – Proposer Details",
+          "properties": {
+            "proposer_name":  { "type": "string",  "title": "Full Name of the Proposer",   "x-html-name": "sa_proposer_name" },
+            "dob_dd":         { "type": "string",  "title": "Date of Birth – Day (DD)",    "x-html-name": "sa_dob_dd",   "maxLength": 2 },
+            "dob_mm":         { "type": "string",  "title": "Date of Birth – Month (MM)",  "x-html-name": "sa_dob_mm",   "maxLength": 2 },
+            "dob_yyyy":       { "type": "string",  "title": "Date of Birth – Year (YYYY)", "x-html-name": "sa_dob_yyyy", "maxLength": 4 },
+            "age":            { "type": "string",  "title": "Age (years)",                 "x-html-name": "sa_age" },
+            "age_yr":         { "type": "string",  "title": "Age (months/completed years)","x-html-name": "sa_age_yr" },
+            "address":        { "type": "string",  "title": "Full Address",                "x-html-name": "sa_address" },
+            "marital_status": {
+              "type": "string",
+              "title": "Marital Status",
+              "x-html-name": "sa_marital",
+              "enum": ["married", "widow", "single", "divorced"]
+            }
+          }
+        },
+
+        "item_2_occupation": {
+          "type": "object",
+          "title": "Item 2 – Occupation",
+          "properties": {
+            "occupation": {
+              "type": "string",
+              "title": "Occupation",
+              "x-html-name": "sa_occupation",
+              "enum": ["business", "govt", "pvt", "agriculture", "housewife", "student", "professional", "nri", "huf", "others"]
+            },
+            "occupation_other": { "type": "string", "title": "Occupation (if Others)", "x-html-name": "sa_occupation_other" }
+          }
+        },
+
+        "item_3_income": {
+          "type": "object",
+          "title": "Item 3 – Annual Income",
+          "properties": {
+            "income_employment":  { "type": "string", "title": "Income from Employment (Rs.)",         "x-html-name": "sa_income_emp" },
+            "income_business":    { "type": "string", "title": "Income from Business/Profession (Rs.)","x-html-name": "sa_income_biz" },
+            "income_other":       { "type": "string", "title": "Income from Other Sources (Rs.)",      "x-html-name": "sa_income_other" },
+            "income_huf":         { "type": "string", "title": "Income of HUF (Rs.)",                  "x-html-name": "sa_income_huf" },
+            "income_lba":         { "type": "string", "title": "Income of Life to be Assured (Rs.)",   "x-html-name": "sa_income_lba" },
+            "income_proof_submitted": { "type": "boolean", "title": "Income proof submitted?",         "x-html-name": "sa_income_proof" },
+            "doc_itr":            { "type": "boolean", "title": "IT Return submitted",          "x-html-name": "sa_doc_itr" },
+            "doc_salary":         { "type": "boolean", "title": "Salary Certificate submitted", "x-html-name": "sa_doc_salary" },
+            "doc_ca":             { "type": "boolean", "title": "CA Certificate submitted",     "x-html-name": "sa_doc_ca" },
+            "doc_pl":             { "type": "boolean", "title": "P&L Account submitted",        "x-html-name": "sa_doc_pl" },
+            "doc_property":       { "type": "boolean", "title": "Property Certificate submitted","x-html-name": "sa_doc_property" },
+            "doc_others":         { "type": "boolean", "title": "Other docs submitted",         "x-html-name": "sa_doc_others" },
+            "tax_assessee":       { "type": "boolean", "title": "Income Tax Assessee?",         "x-html-name": "sa_tax_assessee" },
+            "tax_detail":         { "type": "string",  "title": "Tax details if assessee",      "x-html-name": "sa_tax_ifyes_detail" },
+            "pan":                { "type": "string",  "title": "PAN",                          "x-html-name": "sa_pan", "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]$", "maxLength": 10 },
+            "tax_bracket":        { "type": "string",  "title": "Tax Bracket",                  "x-html-name": "sa_tax_bracket" }
+          }
+        },
+
+        "item_4_prev_insurance": {
+          "type": "array",
+          "title": "Item 4 – Details of Previous Insurance",
+          "items": {
+            "type": "object",
+            "properties": {
+              "policy_no":   { "type": "string", "title": "Policy No." },
+              "plan":        { "type": "string", "title": "Plan Name & Term" },
+              "sum_assured": { "type": "string", "title": "Sum Assured (Rs.)" },
+              "premium":     { "type": "string", "title": "Annual Premium (Rs.)" },
+              "status":      { "type": "string", "title": "Present Status" }
+            }
+          }
+        },
+
+        "item_5_family_history": {
+          "type": "object",
+          "title": "Item 5 – Family History",
+          "properties": {
+            "father_age":        { "type": "string", "x-html-name": "sa_fh_father_age" },
+            "father_health":     { "type": "string", "x-html-name": "sa_fh_father_health" },
+            "father_death_age":  { "type": "string", "x-html-name": "sa_fh_father_death_age" },
+            "father_cause":      { "type": "string", "x-html-name": "sa_fh_father_cause" },
+            "mother_age":        { "type": "string", "x-html-name": "sa_fh_mother_age" },
+            "mother_health":     { "type": "string", "x-html-name": "sa_fh_mother_health" },
+            "mother_death_age":  { "type": "string", "x-html-name": "sa_fh_mother_death_age" },
+            "mother_cause":      { "type": "string", "x-html-name": "sa_fh_mother_cause" },
+            "siblings": {
+              "type": "array",
+              "title": "Brothers / Sisters",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type":       { "type": "string", "enum": ["brother","sister"], "title": "Type" },
+                  "age":        { "type": "string", "title": "Age if Alive" },
+                  "health":     { "type": "string", "title": "State of Health" },
+                  "death_age":  { "type": "string", "title": "Age at Death" },
+                  "cause":      { "type": "string", "title": "Year / Cause of Death" }
+                }
+              }
+            },
+            "children": {
+              "type": "array",
+              "title": "Sons / Daughters",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type":       { "type": "string", "enum": ["son","daughter"], "title": "Type" },
+                  "age":        { "type": "string", "title": "Age if Alive" },
+                  "health":     { "type": "string", "title": "State of Health" },
+                  "death_age":  { "type": "string", "title": "Age at Death" },
+                  "cause":      { "type": "string", "title": "Year / Cause of Death" }
+                }
+              }
+            }
+          }
+        },
+
+        "item_5a_spouse": {
+          "type": "object",
+          "title": "Item 5a – Spouse Details",
+          "properties": {
+            "spouse_name":   { "type": "string", "title": "Spouse Name",          "x-html-name": "sa_spouse_name" },
+            "spouse_occ":    { "type": "string", "title": "Spouse Occupation",    "x-html-name": "sa_spouse_occ" },
+            "spouse_income": { "type": "string", "title": "Spouse Annual Income", "x-html-name": "sa_spouse_income" }
+          }
+        },
+
+        "item_6_need_analysis": {
+          "type": "object",
+          "title": "Item 6 – Need Analysis",
+          "properties": {
+            "total_income":    { "type": "string", "title": "Total Income (Rs.)",              "x-html-name": "sa_na_total_income" },
+            "liabilities":     { "type": "string", "title": "Total Liabilities (Rs.)",         "x-html-name": "sa_na_liabilities" },
+            "secured_income":  { "type": "string", "title": "Secured Income / Savings (Rs.)",  "x-html-name": "sa_na_secured" },
+            "unsecured":       { "type": "string", "title": "Unsecured Amount (Rs.)",          "x-html-name": "sa_na_unsecured" },
+            "max_insurance":   { "type": "string", "title": "Maximum Insurance Recommended (Rs.)", "x-html-name": "sa_max_insurance" }
+          }
+        },
+
+        "item_7_objectives": {
+          "type": "object",
+          "title": "Item 7 – Investment Objectives & Profile",
+          "properties": {
+            "obj_pure_risk":   { "type": "boolean", "title": "Pure Risk Cover",            "x-html-name": "sa_obj_purerisks" },
+            "obj_savings":     { "type": "boolean", "title": "Savings",                    "x-html-name": "sa_obj_savings" },
+            "obj_money_back":  { "type": "boolean", "title": "Regular Money Back",         "x-html-name": "sa_obj_moneyback" },
+            "obj_secured":     { "type": "boolean", "title": "Secured Returns",            "x-html-name": "sa_obj_secured" },
+            "obj_market":      { "type": "boolean", "title": "Market-Linked Returns",      "x-html-name": "sa_obj_market" },
+            "obj_pension":     { "type": "boolean", "title": "Pension / Retirement",       "x-html-name": "sa_obj_pension" },
+            "obj_health":      { "type": "boolean", "title": "Health Coverage",            "x-html-name": "sa_obj_health" },
+            "obj_children":    { "type": "boolean", "title": "Children's Future",          "x-html-name": "sa_obj_children" },
+            "obj_others":      { "type": "boolean", "title": "Other Objective",            "x-html-name": "sa_obj_others" },
+            "risk_profile": {
+              "type": "string",
+              "title": "Risk Profile (7b)",
+              "x-html-name": "sa_risk_profile",
+              "enum": ["conservative", "aggressive"]
+            },
+            "premium_mode": {
+              "type": "string",
+              "title": "Preferred Premium Payment Mode (7c)",
+              "x-html-name": "sa_prem_mode",
+              "enum": ["lumpsum", "regular"]
+            },
+            "time_frame": {
+              "type": "string",
+              "title": "Investment Time Frame (7d)",
+              "x-html-name": "sa_timeframe",
+              "enum": ["3-5", "6-10", "11-15", "16-20", "21+", "death"]
+            },
+            "time_frame_other": { "type": "string", "title": "Time Frame (Other / specify)", "x-html-name": "sa_timeframe_other" }
+          }
+        },
+
+        "item_8_plan_category": {
+          "type": "object",
+          "title": "Item 8 – Categorization of Plans",
+          "properties": {
+            "plan_category": {
+              "type": "string",
+              "title": "Selected Plan Category (radio value)",
+              "x-html-name": "sa_plan_category",
+              "enum": [
+                "Tech Term", "Jeevan Amar", "New Jeevan Amar",
+                "New Endowment Plan", "New Jeevan Anand", "Jeevan Lakshya",
+                "Jeevan Labh", "Bima Jyoti", "New Bima Bachat",
+                "Jeevan Azad", "Dhan Sanchay", "Dhan Vriddhi",
+                "Jeevan Kiran", "Jeevan Utsav", "New Jeevan Shanti",
+                "Jeevan Akshay VII", "PMJJBY", "Jeevan Pragati",
+                "Jeevan Umang", "Bachat Plus", "New Money Back 20 Yrs",
+                "New Money Back 25 Yrs", "Jeevan Tarun", "Jeevan Shiromani",
+                "Jeevan Nidhi", "New Pension Plus", "Jeevan Nischay",
+                "Micro Bachat", "Aadhar Stambh", "Aadhar Shila",
+                "SIIP", "New Tech Term", "Cancer Cover",
+                "Health Protection Plus", "Jeevan Arogya"
+              ]
+            }
+          }
+        },
+
+        "item_9_product_chosen": {
+          "type": "object",
+          "title": "Item 9 – Product Chosen",
+          "properties": {
+            "table_no":    { "type": "string", "title": "Table / Plan No.",         "x-html-name": "sa_prop_table_no" },
+            "plan_name":   { "type": "string", "title": "Plan Name",                "x-html-name": "sa_prop_plan_name" },
+            "term":        { "type": "string", "title": "Term",                     "x-html-name": "sa_prop_term" },
+            "sum_assured": { "type": "string", "title": "Sum Assured (Rs.)",        "x-html-name": "sa_prop_sa" },
+            "mode":        { "type": "string", "title": "Mode of Premium Payment",  "x-html-name": "sa_prop_mode" },
+            "premium":     { "type": "string", "title": "Premium Amount (Rs.)",     "x-html-name": "sa_prop_premium" }
+          }
+        }
+
+      }
+    },
+
     "insurance_suitability_questionnaire": {
       "type": "object",
       "title": "Insurance Suitability Questionnaire (Section 10 & Waiver)",

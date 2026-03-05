@@ -201,12 +201,13 @@
   <div class="office-use-bar">
     <h4>कार्यालय उपयोग के लिए / For Office Use Only</h4>
     <div class="office-use-grid">
-      <div class="field-inline"><label>आवार्ड क्र. / Award no / Inward no:</label><input type="text" placeholder="" /></div>
-      <div class="field-inline"><label>प्रस्ताव क्र. / Proposal no:</label><input type="text" placeholder="" /></div>
-      <div class="field-inline"><label>तारीख / Date:</label><input type="date" /></div>
-      <div class="field-inline"><label>प्रस्ताव तारीख / Date of Proposal:</label><input type="date" /></div>
-      <div class="field-inline"><label>जमा राशि की तारीख / Date of Deposit:</label><input type="date" /></div>
-      <div class="field-inline"><label>बी.ओ.क्र. / B.O.C.:</label><input type="text" placeholder="" /></div>
+      <div class="field-inline"><label>आवार्ड क्र. / Award no / Inward no:</label><input type="text" name="inward_no" placeholder="" /></div>
+      <div class="field-inline"><label>प्रस्ताव क्र. / Proposal no:</label><input type="text" name="proposal_no" placeholder="" /></div>
+      <div class="field-inline"><label>तारीख / Date:</label><input type="date" name="ou_date" /></div>
+      <div class="field-inline"><label>प्रस्ताव तारीख / Date of Proposal:</label><input type="date" name="date_of_proposal" /></div>
+      <div class="field-inline"><label>जमा राशि की तारीख / Date of Deposit:</label><input type="date" name="date_of_deposit" /></div>
+      <div class="field-inline"><label>बी.ओ.क्र. / B.O.C.:</label><input type="text" name="boc_no" placeholder="" /></div>
+      <div class="field-inline"><label>जमा राशि / Amt. of Deposit (Rs.):</label><input type="number" name="amt_of_deposit" placeholder="Rs." min="0" /></div>
     </div>
   </div>
 
@@ -1224,6 +1225,22 @@
         </div>
       </div>
     </div>
+    <!-- Plan Name / No. / Premium Amount row (added for schema alignment) -->
+    <div class="form-row" style="margin-top:8px;margin-bottom:4px;">
+      <div class="form-group col-4">
+        <label>योजनेचे नाव / योजना का नाम / Plan Name</label>
+        <input type="text" name="plan_name" placeholder="e.g. New Endowment Plan" />
+      </div>
+      <div class="form-group col-4">
+        <label>योजना क्र. / सारणी नं. / Plan No. (Table No.)</label>
+        <input type="text" name="plan_no" placeholder="e.g. 814" />
+      </div>
+      <div class="form-group col-4">
+        <label>हप्त्याची रक्कम / प्रीमियम राशि / Premium Amount (Rs.)</label>
+        <input type="number" name="premium_amount" placeholder="Rs." min="0" />
+      </div>
+    </div>
+
     <div class="plan-table-wrap">
       <div style="font-weight:600;font-size:13px;margin-bottom:4px;">a.</div>
       <table class="plan-table">
@@ -4592,6 +4609,14 @@
           </td>
         </tr>
         <tr>
+          <td style="border:1px solid #aac;padding:8px 12px;">
+            <label style="font-size:12px;display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <input type="checkbox" name="sa_waiver_opted" id="sa_waiver_opted" style="width:16px;height:16px;" />
+              <span>मी वरील प्रश्नावली भरणार नाही / मैं प्रश्नावली नहीं भरना चाहता / <strong>I opt for waiver (will not fill the questionnaire above)</strong></span>
+            </label>
+          </td>
+        </tr>
+        <tr>
           <td style="border:1px solid #aac;padding:9px 12px;line-height:1.65;">
             मी वरील प्रश्नांची उत्तरे देणार नाही आणि मी माझ्यासाठी प्रस्तावित विमा योजना निश्चित करण्याची संपूर्ण जबाबदारी स्वीकारतो.<br/>
             मैं उपरोक्त प्रश्नावली के उत्तर नहीं देना चाहता और प्रस्तावित बीमा योजना का निर्धारण करने के लिए अंग्रेजी पाठ ही अंतिम माना जाएगा।<br/>
@@ -4639,6 +4664,6 @@
 </div><!-- end form-wrapper -->
 </form>
 
-<script src="script.js?v=8"></script>
+<script src="script.js?v=9"></script>
 </body>
 </html>
