@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "LIC e-form (Python static server)",
+      "name": "LIC e-form (Flask server)",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "5173", "--directory", "/Users/akb/LIC e-form"],
+      "runtimeArgs": ["/Users/akb/LIC e-form/server.py"],
       "port": 5173
     }
   ]

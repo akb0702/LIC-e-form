@@ -1184,3 +1184,190 @@ function fillFromJson(data) {
 
   console.log('[fillFromJson] Form populated successfully.');
 }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   PDF AUTO-FILL  –  parse a proposal-form PDF via Together.ai and fill the form
+   Functions exposed globally: startPdfParse(), toggleJsonPreview(), applyParsedJson()
+══════════════════════════════════════════════════════════════════════════════ */
+
+/** Holds the last successfully parsed JSON so the modal can re-apply it. */
+var _parsedPdfData = null;
+
+/**
+ * Called by the "Parse & Fill" button in the PDF toolbar.
+ * Uploads the selected PDF to /api/parse-pdf-stream and consumes SSE events.
+ */
+function startPdfParse() {
+  var fileInput   = document.getElementById('pdfFileInput');
+  var apiKeyInput = document.getElementById('togetherApiKey');
+  var progressDiv = document.getElementById('pdfProgress');
+  var progressBar = document.getElementById('pdfProgressBar');
+  var progressTxt = document.getElementById('pdfProgressText');
+  var statusMsg   = document.getElementById('pdfStatusMsg');
+  var viewJsonBtn = document.getElementById('pdfViewJsonBtn');
+
+  /* ── Validate inputs ── */
+  if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+    alert('Please select a PDF file first.');
+    return;
+  }
+  var apiKey = (apiKeyInput && apiKeyInput.value.trim()) || '';
+  if (!apiKey) {
+    alert('Please enter your Together.ai API key.');
+    return;
+  }
+
+  /* ── Reset UI ── */
+  if (progressDiv) progressDiv.style.display  = 'block';
+  if (statusMsg)   { statusMsg.style.display  = 'block'; statusMsg.style.color = '#7fcfff'; statusMsg.textContent = ''; }
+  if (viewJsonBtn) viewJsonBtn.style.display  = 'none';
+  if (progressBar) progressBar.style.width    = '0%';
+  if (progressTxt) progressTxt.textContent    = 'Uploading PDF…';
+
+  /* ── Build multipart request ── */
+  var formData = new FormData();
+  formData.append('pdf', fileInput.files[0]);
+
+  fetch('/api/parse-pdf-stream', {
+    method:  'POST',
+    headers: { 'X-Together-Api-Key': apiKey },
+    body:    formData
+  })
+  .then(function(resp) {
+    if (!resp.ok) {
+      return resp.json().then(function(e) {
+        throw new Error(e.error || ('HTTP ' + resp.status));
+      });
+    }
+    if (!resp.body) {
+      throw new Error('ReadableStream not supported in this browser. Please use Chrome or Edge.');
+    }
+
+    var reader  = resp.body.getReader();
+    var decoder = new TextDecoder();
+    var buffer  = '';
+    var totalPages  = 0;
+    var donePages   = 0;
+
+    /* ── Handle one parsed SSE event ── */
+    function handleEvent(evt) {
+      switch (evt.status) {
+
+        case 'started':
+          totalPages = evt.total_pages || 0;
+          if (progressTxt) progressTxt.textContent = 'Parsing ' + totalPages + ' page(s) via Together.ai…';
+          if (progressBar) progressBar.style.width = '5%';
+          break;
+
+        case 'processing':
+          if (progressTxt) progressTxt.textContent =
+            'Processing page ' + evt.page + ' of ' + evt.total + '…';
+          if (progressBar) progressBar.style.width =
+            (Math.round(((evt.page - 1) / (evt.total || 1)) * 85) + 5) + '%';
+          break;
+
+        case 'page_done':
+          donePages++;
+          if (progressTxt) progressTxt.textContent =
+            'Page ' + evt.page + ' extracted  (' + donePages + ' / ' + totalPages + ')';
+          if (progressBar) progressBar.style.width =
+            (Math.round((donePages / (totalPages || 1)) * 85) + 5) + '%';
+          break;
+
+        case 'page_error':
+          if (statusMsg) {
+            statusMsg.style.color   = '#ffb347';
+            statusMsg.textContent   = '⚠ Page ' + evt.page + ' error: ' + evt.error;
+          }
+          break;
+
+        case 'done':
+          if (progressBar) progressBar.style.width = '100%';
+          if (progressTxt) progressTxt.textContent = '✓ Extraction complete!';
+          _parsedPdfData = evt.data || {};
+          if (viewJsonBtn) viewJsonBtn.style.display = 'block';
+          /* Auto-apply to form */
+          try {
+            fillFromJson(_parsedPdfData);
+            if (statusMsg) {
+              statusMsg.style.color = '#7fcfff';
+              statusMsg.textContent = '✓ Form auto-populated from ' + totalPages + ' page(s).';
+            }
+          } catch (fe) {
+            if (statusMsg) {
+              statusMsg.style.color   = '#ffb347';
+              statusMsg.textContent   = 'fillFromJson error: ' + fe.message;
+            }
+          }
+          break;
+
+        case 'error':
+          if (progressTxt) progressTxt.textContent = '✕ Error';
+          if (statusMsg) {
+            statusMsg.style.color = '#ff8080';
+            statusMsg.textContent = 'Error: ' + (evt.error || 'Unknown');
+          }
+          break;
+      }
+    }
+
+    /* ── Stream reader loop ── */
+    function pump() {
+      return reader.read().then(function(result) {
+        if (result.done) {
+          if (progressTxt && progressTxt.textContent.indexOf('✓') === -1) {
+            progressTxt.textContent = 'Stream ended.';
+          }
+          return;
+        }
+        buffer += decoder.decode(result.value, { stream: true });
+        var lines = buffer.split('\n');
+        buffer = lines.pop(); /* keep any partial line */
+        lines.forEach(function(line) {
+          if (!line.startsWith('data: ')) return;
+          try {
+            handleEvent(JSON.parse(line.slice(6)));
+          } catch (_) { /* malformed JSON line — skip */ }
+        });
+        return pump();
+      });
+    }
+
+    return pump();
+  })
+  .catch(function(err) {
+    if (progressTxt) progressTxt.textContent = '✕ Failed';
+    if (statusMsg) {
+      statusMsg.style.display = 'block';
+      statusMsg.style.color   = '#ff8080';
+      statusMsg.textContent   = 'Error: ' + err.message;
+    }
+    console.error('[pdfParse]', err);
+  });
+}
+
+/** Toggle the JSON preview modal. */
+function toggleJsonPreview() {
+  var modal   = document.getElementById('jsonPreviewModal');
+  var content = document.getElementById('jsonPreviewContent');
+  if (!modal || !content) return;
+  if (modal.style.display === 'none' || !modal.style.display) {
+    if (_parsedPdfData) {
+      content.textContent = JSON.stringify(_parsedPdfData, null, 2);
+    } else {
+      content.textContent = '(No parsed data yet)';
+    }
+    modal.style.display = 'block';
+  } else {
+    modal.style.display = 'none';
+  }
+}
+
+/** Apply the cached parsed JSON to the form and close the modal. */
+function applyParsedJson() {
+  if (_parsedPdfData) {
+    fillFromJson(_parsedPdfData);
+  }
+  var modal = document.getElementById('jsonPreviewModal');
+  if (modal) modal.style.display = 'none';
+}
