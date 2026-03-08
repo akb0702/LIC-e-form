@@ -366,10 +366,10 @@ function addInsuranceRow() {
       <div class="form-group col-4"><label>3. योजना व मुदत / Plan and Term</label><input type="text" name="ei_plan[]" placeholder="Plan & Term" /></div>
     </div>
     <div class="form-row">
-      <div class="form-group col-3"><label>4. विमा रक्कम / Sum Assured (Rs.)</label><input type="number" name="ei_sa[]" placeholder="Rs." /></div>
-      <div class="form-group col-3"><label>5. जोखीम विमा विनाराशी / Term Rider SA (Rs.)</label><input type="number" name="ei_term_rider_sa[]" placeholder="Rs." /></div>
-      <div class="form-group col-3"><label>6. गंभीर आजार / CI Rider SA (Rs.)</label><input type="number" name="ei_ci_rider_sa[]" placeholder="Rs." /></div>
-      <div class="form-group col-3"><label>7. अपघाती लाभ / AB / ADDB SA (Rs.)</label><input type="number" name="ei_ab_addb_sa[]" placeholder="Rs." /></div>
+      <div class="form-group col-3"><label>4. विमा रक्कम / Sum Assured (Rs.)</label><input type="text" name="ei_sa[]" placeholder="Rs." /></div>
+      <div class="form-group col-3"><label>5. जोखीम विमा विनाराशी / Term Rider SA (Rs.)</label><input type="text" name="ei_term_rider_sa[]" placeholder="Rs." /></div>
+      <div class="form-group col-3"><label>6. गंभीर आजार / CI Rider SA (Rs.)</label><input type="text" name="ei_ci_rider_sa[]" placeholder="Rs." /></div>
+      <div class="form-group col-3"><label>7. अपघाती लाभ / AB / ADDB SA (Rs.)</label><input type="text" name="ei_ab_addb_sa[]" placeholder="Rs." /></div>
     </div>
     <div class="form-row">
       <div class="form-group col-3"><label>8. प्रारंभ तिथी / Date of Commencement (DD/MM/YYYY)</label><input type="date" name="ei_commencement[]" /></div>
@@ -605,6 +605,19 @@ function addFHChildRow() {
 function normalizePdfJson(raw) {
   if (!raw || typeof raw !== 'object') return raw;
 
+  // Normalise DD/MM/YYYY or DD-MM-YYYY → YYYY-MM-DD for date inputs; pass YYYY-MM-DD through
+  function toDateInput(val) {
+    if (!val) return undefined;
+    var s = String(val).trim();
+    if (/^(NA|N\/A|na|n\/a|-)$/i.test(s)) return undefined;
+    // Already ISO
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    // DD/MM/YYYY or DD-MM-YYYY
+    var m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+    if (m) return m[3] + '-' + m[2].padStart(2,'0') + '-' + m[1].padStart(2,'0');
+    return s;
+  }
+
   // Convert YES/NO/true/false/string to boolean
   function toBool(val) {
     if (val === undefined || val === null) return undefined;
@@ -700,10 +713,18 @@ function normalizePdfJson(raw) {
       pep:                       occ.pep              != null ? occ.pep              : pepO.is_pep
     };
 
-    // Armed forces
-    var af = si.armed_forces || {};
+    // Armed forces — merge si.armed_forces (schema.json) and occupation_details.armed_forces_employment (lic_form_unfilled)
+    var af  = si.armed_forces || {};
     var afe = ((si.occupation_details || {}).armed_forces_employment) || {};
-    nsi.armed_forces = { in_armed_forces: af.in_armed_forces != null ? af.in_armed_forces : (afe.wing != null ? true : undefined) };
+    nsi.armed_forces = {
+      in_armed_forces:  af.in_armed_forces  != null ? af.in_armed_forces  : af.in_armed_forces,
+      wing:             af.wing             || afe.wing,
+      rank:             af.rank             || afe.rank,
+      last_medical:     af.last_medical     || afe.last_medical_examination_date,
+      medical_category: af.medical_category || afe.medical_examination_category,
+      below_a1:         af.below_a1         != null ? af.below_a1 : (afe.below_a1_category && afe.below_a1_category.was_ever_below_a1),
+      below_a1_when:    af.below_a1_when    || (afe.below_a1_category && afe.below_a1_category.if_so_when)
+    };
 
     // Tax residency
     var tr = si.tax_residency || {};
@@ -899,13 +920,17 @@ function normalizePdfJson(raw) {
   }
 
   /* ── section_iv ─────────────────────────────── */
-  var siv = raw.section_iv;
-  if (siv) {
+  var siv = raw.section_iv || {};
+  // Also pick up top-level fields if the model didn't nest them under section_iv
+  var sivEiTable  = siv.existing_insurance_table  || raw.existing_insurance_table;
+  var sivNomDet   = siv.nominee_details           || raw.nominee_details;
+  var sivWitDet   = siv.witness_details           || raw.witness_details;
+  if (siv || sivEiTable || sivNomDet) {
     var nsiv = {};
     var eiRaw = siv.existing_insurance;
     var eiArr = Array.isArray(eiRaw) ? eiRaw
               : (eiRaw && Array.isArray(eiRaw.policies)) ? eiRaw.policies
-              : Array.isArray(siv.existing_insurance_table) ? siv.existing_insurance_table
+              : Array.isArray(sivEiTable) ? sivEiTable
               : [];
     nsiv.existing_insurance = {
       policies: eiArr.map(function(p) {
@@ -916,13 +941,13 @@ function normalizePdfJson(raw) {
                  term_rider_sa:     p.term_rider_sa      || p.term_rider_sum_assured,
                  ci_rider_sa:       p.ci_rider_sa        || p.ci_rider_sum_assured,
                  ab_addb_sa:        p.ab_addb_sa         || p.ab_addb_sum_assured,
-                 commencement_date: p.commencement_date  || p.date_of_commencement,
-                 revival_date:      p.revival_date       || p.date_of_revival,
+                 commencement_date: toDateInput(p.commencement_date  || p.date_of_commencement),
+                 revival_date:      toDateInput(p.revival_date       || p.date_of_revival),
                  accepted:          p.accepted           || p.accepted_at_ordinary_rate,
                  accepted_details:  p.accepted_details   || p.details_if_not_ordinary_rate,
                  medical_type:      p.medical_type       || p.medical_non_medical,
                  inforce:           p.inforce            || p.in_force,
-                 fup_surrender_date: p.fup_surrender_date || p.date_of_fup_or_surrender };
+                 fup_surrender_date: toDateInput(p.fup_surrender_date || p.date_of_fup_or_surrender) };
       }),
       q14a_proposals_declined: eiRaw && eiRaw.q14a_proposals_declined,
       q14b_policy_lapsed:      eiRaw && eiRaw.q14b_policy_lapsed,
@@ -935,10 +960,10 @@ function normalizePdfJson(raw) {
     if (nsiv.existing_insurance.q14a_proposals_declined == null && ph5.has_other_proposals != null)
       nsiv.existing_insurance.q14a_proposals_declined = toBool(ph5.has_other_proposals);
 
-    // Nominees
+    // Nominees — also check top-level nominee_details
     var nom    = siv.nominee || {};
-    var nomDet = siv.nominee_details || {};
-    var nomArr = Array.isArray(siv.nominee_details) ? siv.nominee_details
+    var nomDet = sivNomDet || {};
+    var nomArr = Array.isArray(sivNomDet) ? sivNomDet
                : (nom.nominees && Array.isArray(nom.nominees)) ? nom.nominees
                : [];
     nsiv.nominee = {
@@ -967,9 +992,9 @@ function normalizePdfJson(raw) {
     var declSec = siv.declaration_section || {};
     if (!nsiv.declaration.la_name && declSec.applicant_name) nsiv.declaration.la_name = declSec.applicant_name;
 
-    // Witness
-    var wit  = siv.witness         || {};
-    var witD = siv.witness_details || {};
+    // Witness — also check top-level witness_details
+    var wit  = siv.witness  || {};
+    var witD = sivWitDet    || {};
     nsiv.witness = { name:       wit.name       || witD.name,
                      occupation: wit.occupation || witD.occupation,
                      address:    wit.address    || witD.address };
@@ -1138,6 +1163,12 @@ function fillFromJson(data) {
     if (occ.pep != null)                  yn('pep', occ.pep);
     var af = si.armed_forces || {};
     if (af.in_armed_forces != null) yn('armed_forces', af.in_armed_forces);
+    byName('armed_wing',             af.wing);
+    byName('armed_rank',             af.rank);
+    byName('armed_last_medical',     af.last_medical);
+    byName('armed_medical_category', af.medical_category);
+    if (af.below_a1 != null)         yn('armed_below_a1', af.below_a1);
+    byName('armed_below_a1_when',    af.below_a1_when);
     var tr = si.tax_residency || {};
     if (tr.tax_resident_outside_india != null) yn('tax_outside_india', tr.tax_resident_outside_india);
     var bk = si.bank_details || {};
