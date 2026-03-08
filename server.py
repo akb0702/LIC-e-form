@@ -145,53 +145,55 @@ def _schema_to_fieldlist(schema: dict, prefix: str = "", depth: int = 0) -> list
 
 # ── Prompt builder ────────────────────────────────────────────────────────────
 
-_BASE_EXTRACTION_PROMPT = """\
-You are a data extraction assistant for LIC (Life Insurance Corporation of India) proposal forms.
-This image shows {PAGE_HEADER} of an LIC Proposal Form No. 300.
-{SCHEMA_HINT}
-Extract ALL visible, filled-in data from this page and return it as a single JSON object.
-
-Use these top-level section keys matching the form structure:
-  office_use            — inward_no, proposal_no, inward_date, amt_of_deposit, boc_no, boc_date
-  section_i             — personal details, KYC/PMLA, occupation, bank, tax residency, contact
-  section_ii            — plan details, riders, police/SSS, PWB, simultaneous proposals, settlement, portal
-  section_iii           — health metrics, medical history, habits, family history
-  section_iv            — existing insurance table, nominee details, declaration, witness
-  addendum_1_settlement_maturity   — maturity benefit settlement option
-  addendum_2_death_benefit_instalments — death benefit instalment option
-  addendum_plan_specific           — plan-specific fields (Dhan Sanchay, Jeevan Azad, etc.)
-  moral_hazard_report   — agent confidential report sections I-V plus signatures
-  insurance_suitability_questionnaire — section 10 (agent+proposer declaration), waiver
-  annexure_i            — suitability analysis items 1-9 (proposer details through product chosen)
-
-Nested key conventions (use these exact names inside section_i):
-  personal_details: { prefix, first_name, middle_name, last_name }
-  father_full_name, mother_full_name, gender, marital_status, spouse_full_name
-  date_of_birth (YYYY-MM-DD), age, place_of_birth, nature_of_age_proof, nationality, citizenship
-  permanent_address: { house_building_name_street, town_village_taluka, district, state_country, pin_code, tel_no_with_std }
-  correspondence_address: { same fields as permanent_address }
-  residential_status_info: { status, holding_oci_card, address_outside_india }
-  kyc_pmla_details: { is_income_tax_assessee, pan_number, gst_registered: { is_registered, gstin },
-                      id_details: { proof_of_identity, id_number, expiry_date }, proof_of_correspondence_address }
-  occupation_details: { educational_qualification, present_occupation, source_of_income,
-                        name_of_present_employer, exact_nature_of_duties, length_of_service, annual_income,
-                        hazardous_occupation_or_hobby: { has_hazardous_activities, details },
-                        legal_criminal_proceedings: { has_legal_proceedings, details },
-                        politically_exposed_person: { is_pep } }
-  bank_details: { account_type, account_number, micr_code, ifsc_code, bank_name_and_address }
-  tax_residency: { is_tax_resident_outside_india }
-  mobile_number, email_id
-
-Rules:
-1. Extract ONLY data that is ACTUALLY FILLED IN — omit blank or unchecked fields completely
-2. Return ONLY valid JSON — NO markdown code fences, NO explanation text, NOTHING before {{ or after }}
-3. Booleans: true/false for checkboxes and radio buttons
-4. Dates: YYYY-MM-DD format wherever possible
-5. Amounts/numbers: numeric values without ₹ or Rs symbols
-6. If this page has no filled data, return {{}}
-
-Return ONLY the JSON object:\
-"""
+_BASE_EXTRACTION_PROMPT = (
+    "You are a data extraction assistant for LIC (Life Insurance Corporation of India) proposal forms.\n"
+    "This image shows {PAGE_HEADER} of an LIC Proposal Form No. 300.\n"
+    "{SCHEMA_HINT}\n"
+    "Extract ALL visible, filled-in data from this page and return it as a single JSON object.\n"
+    "\n"
+    "Use these top-level section keys matching the form structure:\n"
+    "  office_use            — inward_no, proposal_no, inward_date, amt_of_deposit, boc_no, boc_date\n"
+    "  section_i             — personal details, KYC/PMLA, occupation, bank, tax residency, contact\n"
+    "  section_ii            — plan details, riders, police/SSS, PWB, simultaneous proposals, settlement, portal\n"
+    "  section_iii           — health metrics, medical history, habits, family history\n"
+    "  section_iv            — existing insurance table, nominee details, declaration, witness\n"
+    "  addendum_1_settlement_maturity   — maturity benefit settlement option\n"
+    "  addendum_2_death_benefit_instalments — death benefit instalment option\n"
+    "  addendum_plan_specific           — plan-specific fields (Dhan Sanchay, Jeevan Azad, etc.)\n"
+    "  moral_hazard_report   — agent confidential report sections I-V plus signatures\n"
+    "  insurance_suitability_questionnaire — section 10 (agent+proposer declaration), waiver\n"
+    "  annexure_i            — suitability analysis items 1-9 (proposer details through product chosen)\n"
+    "\n"
+    "Nested key conventions (use these exact key names inside section_i):\n"
+    "  personal_details -> prefix, first_name, middle_name, last_name\n"
+    "  father_full_name, mother_full_name, gender, marital_status, spouse_full_name\n"
+    "  date_of_birth (YYYY-MM-DD), age, place_of_birth, nature_of_age_proof, nationality, citizenship\n"
+    "  permanent_address -> house_building_name_street, town_village_taluka, district, state_country, pin_code, tel_no_with_std\n"
+    "  correspondence_address -> same sub-keys as permanent_address\n"
+    "  residential_status_info -> status, holding_oci_card, address_outside_india\n"
+    "  kyc_pmla_details -> is_income_tax_assessee, pan_number,\n"
+    "                      gst_registered -> is_registered, gstin;\n"
+    "                      id_details -> proof_of_identity, id_number, expiry_date;\n"
+    "                      proof_of_correspondence_address\n"
+    "  occupation_details -> educational_qualification, present_occupation, source_of_income,\n"
+    "                        name_of_present_employer, exact_nature_of_duties, length_of_service, annual_income,\n"
+    "                        hazardous_occupation_or_hobby -> has_hazardous_activities, details;\n"
+    "                        legal_criminal_proceedings -> has_legal_proceedings, details;\n"
+    "                        politically_exposed_person -> is_pep\n"
+    "  bank_details -> account_type, account_number, micr_code, ifsc_code, bank_name_and_address\n"
+    "  tax_residency -> is_tax_resident_outside_india\n"
+    "  mobile_number, email_id\n"
+    "\n"
+    "Rules:\n"
+    "1. Extract ONLY data that is ACTUALLY FILLED IN — omit blank or unchecked fields completely\n"
+    "2. Return ONLY valid JSON — NO markdown code fences, NO explanation, NOTHING before or after the JSON\n"
+    "3. Booleans: true/false for checkboxes and radio buttons\n"
+    "4. Dates: YYYY-MM-DD format wherever possible\n"
+    "5. Amounts/numbers: numeric values without Rs or rupee symbols\n"
+    '6. If this page has no filled data, return {}\n'
+    "\n"
+    "Return ONLY the JSON object:"
+)
 
 
 def build_page_prompt(page_num: int) -> str | None:
