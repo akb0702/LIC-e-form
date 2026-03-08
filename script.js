@@ -56,6 +56,20 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ──────────────────────────────────────────────
+     Gender → show/hide Female Proposer section
+  ────────────────────────────────────────────── */
+  function toggleFemaleSection() {
+    var femaleSec = document.getElementById('femalePropSection');
+    if (!femaleSec) return;
+    var checked = document.querySelector('input[name="gender"]:checked');
+    femaleSec.style.display = (checked && checked.value === 'Female') ? '' : 'none';
+  }
+  document.querySelectorAll('input[name="gender"]').forEach(function(r) {
+    r.addEventListener('change', toggleFemaleSection);
+  });
+  toggleFemaleSection(); // initialise on page load
+
+  /* ──────────────────────────────────────────────
      Marital Status → Spouse Name field
   ────────────────────────────────────────────── */
   const maritalStatus = document.getElementById('marital_status');
@@ -1109,7 +1123,11 @@ function fillFromJson(data) {
     byId('last_name',    nm.last_name);
     byId('father_name', si.father_name);
     byId('mother_name', si.mother_name);
-    if (si.gender)         radio('gender', si.gender);
+    if (si.gender) {
+      radio('gender', si.gender);
+      var femaleSec = document.getElementById('femalePropSection');
+      if (femaleSec) femaleSec.style.display = (si.gender === 'Female') ? '' : 'none';
+    }
     if (si.marital_status) selId('marital_status', si.marital_status);
     byId('spouse_name',  si.spouse_name);
     if (si.date_of_birth) {
@@ -1194,9 +1212,9 @@ function fillFromJson(data) {
     byName('policy_date_back', pl.policy_date_back);
     var rd = sii.riders || {};
     check('rider_term', rd.term_assurance_rider);
-    byName('term_rider_sa', rd.term_assurance_rider_sa);
+    if (rd.term_assurance_rider !== false) byName('term_rider_sa', rd.term_assurance_rider_sa);
     check('rider_ci',   rd.critical_illness_rider);
-    byName('ci_benefit', rd.critical_illness_rider_sa);
+    if (rd.critical_illness_rider !== false) byName('ci_benefit', rd.critical_illness_rider_sa);
     if (rd.pwb_rider != null) {
       check('rider_pwb', rd.pwb_rider);
       if (rd.pwb_rider) {
@@ -1206,7 +1224,8 @@ function fillFromJson(data) {
     }
     check('rider_ab',  rd.accident_benefit_rider);
     check('rider_adb', rd.addb_rider);
-    byName('accident_benefit', rd.accident_benefit_sa || rd.addb_rider_sa);
+    if (rd.accident_benefit_rider !== false || rd.addb_rider !== false)
+      byName('accident_benefit', rd.accident_benefit_sa || rd.addb_rider_sa);
     var pp = sii.police_personnel || {};
     if (pp.is_police != null)     yn('police_duty',      pp.is_police);
     if (pp.on_duty_rider != null) yn('police_rider_duty', pp.on_duty_rider);
