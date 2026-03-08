@@ -596,6 +596,397 @@ function addFHChildRow() {
 }
 
 /* ════════════════════════════════════════════════
+   normalizePdfJson(raw)
+   Converts the lic_form_unfilled.json-style nested
+   key names (output by Together.ai) to the
+   schema.json-style names expected by fillFromJson().
+   Safe to call on already-normalized data.
+   ════════════════════════════════════════════════ */
+function normalizePdfJson(raw) {
+  if (!raw || typeof raw !== 'object') return raw;
+
+  // Convert YES/NO/true/false/string to boolean
+  function toBool(val) {
+    if (val === undefined || val === null) return undefined;
+    if (typeof val === 'boolean') return val;
+    var s = String(val).toUpperCase();
+    if (s === 'YES' || s === 'Y') return true;
+    if (s === 'NO'  || s === 'N') return false;
+    return undefined;
+  }
+
+  var out = {};
+
+  /* ── office_use ─────────────────────────────── */
+  var ou = raw.office_use || {};
+  if (Object.keys(ou).length) out.office_use = ou;
+
+  /* ── section_i ──────────────────────────────── */
+  var si = raw.section_i;
+  if (si) {
+    var nsi = {};
+    nsi.customer_id = si.customer_id;
+    nsi.kyc_number  = si.ckyc_number || si.kyc_number;
+
+    // Name: support personal_details (new) or name (old)
+    var pd = si.personal_details || si.name || {};
+    nsi.name = { prefix: pd.prefix, first_name: pd.first_name,
+                 middle_name: pd.middle_name, last_name: pd.last_name };
+
+    nsi.father_name    = si.father_full_name || si.father_name;
+    nsi.mother_name    = si.mother_full_name || si.mother_name;
+    nsi.gender         = si.gender;
+    nsi.marital_status = si.marital_status;
+    nsi.spouse_name    = si.spouse_full_name || si.spouse_name;
+    nsi.date_of_birth  = si.date_of_birth;
+    nsi.place_of_birth = si.place_of_birth;
+    nsi.age_proof      = si.nature_of_age_proof || si.age_proof;
+    nsi.nationality    = si.nationality;
+    nsi.citizenship    = si.citizenship;
+    nsi.mobile         = si.mobile_number || si.mobile;
+    nsi.email          = si.email_id || si.email;
+
+    // Permanent address
+    function mapAddr(a) {
+      if (!a) return {};
+      return {
+        house: a.house_building_name_street || a.house,
+        town:  a.town_village_taluka        || a.town,
+        city:  a.district                   || a.city,
+        state: a.state_country              || a.state,
+        pin:   a.pin_code                   || a.pin,
+        tel:   a.tel_no_with_std            || a.tel
+      };
+    }
+    nsi.permanent_address = mapAddr(si.permanent_address);
+    nsi.correspondence_address_same_as_permanent = si.correspondence_address_same_as_permanent;
+    nsi.correspondence_address = mapAddr(si.correspondence_address);
+
+    // Residential status
+    var rs = si.residential_status_info || {};
+    nsi.residential_status = si.residential_status || rs.status;
+    nsi.oci_card = si.oci_card != null ? si.oci_card : rs.holding_oci_card;
+
+    // KYC/PMLA
+    var kyc = si.kyc_pmla || si.kyc_pmla_details || {};
+    var gstR = kyc.gst_registered || {};
+    var idD  = kyc.id_details     || {};
+    nsi.kyc_pmla = {
+      income_tax_assessee: kyc.income_tax_assessee != null ? kyc.income_tax_assessee : kyc.is_income_tax_assessee,
+      pan:             kyc.pan       || kyc.pan_number,
+      gstn_registered: kyc.gstn_registered != null ? kyc.gstn_registered : gstR.is_registered,
+      gstin:           kyc.gstin     || gstR.gstin,
+      id_proof_type:   kyc.id_proof_type  || idD.proof_of_identity,
+      id_number:       kyc.id_number      || idD.id_number,
+      id_expiry:       kyc.id_expiry      || idD.expiry_date,
+      corr_proof:      kyc.corr_proof     || kyc.proof_of_correspondence_address
+    };
+
+    // Occupation
+    var occ = si.occupation || si.occupation_details || {};
+    var haz  = occ.hazardous_occupation_or_hobby  || {};
+    var crim = occ.legal_criminal_proceedings      || {};
+    var pepO = occ.politically_exposed_person      || {};
+    nsi.occupation = {
+      educational_qualification: occ.educational_qualification,
+      present_occupation:        occ.present_occupation,
+      source_of_income:          occ.source_of_income,
+      employer_name:             occ.employer_name    || occ.name_of_present_employer,
+      nature_of_duties:          occ.nature_of_duties || occ.exact_nature_of_duties,
+      length_of_service:         occ.length_of_service,
+      annual_income:             occ.annual_income,
+      hazardous_occupation:      occ.hazardous_occupation != null ? occ.hazardous_occupation : haz.has_hazardous_activities,
+      criminal_record:           occ.criminal_record  != null ? occ.criminal_record  : crim.has_legal_proceedings,
+      pep:                       occ.pep              != null ? occ.pep              : pepO.is_pep
+    };
+
+    // Armed forces
+    var af = si.armed_forces || {};
+    var afe = ((si.occupation_details || {}).armed_forces_employment) || {};
+    nsi.armed_forces = { in_armed_forces: af.in_armed_forces != null ? af.in_armed_forces : (afe.wing != null ? true : undefined) };
+
+    // Tax residency
+    var tr = si.tax_residency || {};
+    var trVal = tr.tax_resident_outside_india != null ? tr.tax_resident_outside_india
+              : toBool(tr.is_tax_resident_outside_india);
+    nsi.tax_residency = { tax_resident_outside_india: trVal };
+
+    // Bank details
+    var bk = si.bank_details || {};
+    nsi.bank_details = {
+      account_type:      bk.account_type,
+      account_number:    bk.account_number,
+      micr_code:         bk.micr_code,
+      ifsc_code:         bk.ifsc_code,
+      bank_name_address: bk.bank_name_address || bk.bank_name_and_address
+    };
+
+    out.section_i = nsi;
+  }
+
+  /* ── section_ii ─────────────────────────────── */
+  var sii = raw.section_ii;
+  if (sii) {
+    var nsii = {};
+    nsii.objective_of_insurance = sii.objective_of_insurance || sii.insurance_objective;
+    nsii.proposal_under         = sii.proposal_under         || sii.proposal_type;
+
+    // Plan: check both plan{} object and plan_details[0] (lic_form_unfilled page_7)
+    var pl  = sii.plan  || {};
+    var pd7 = (Array.isArray(sii.plan_details) && sii.plan_details[0]) || {};
+    nsii.plan = {
+      plan_name:        pl.plan_name,
+      plan_no:          pl.plan_no,
+      policy_term:      pl.policy_term      || pd7.term_and_premium_paying_term,
+      sum_assured:      pl.sum_assured      || pd7.sum_assured,
+      premium_mode:     pl.premium_mode     || pd7.mode_of_premium,
+      premium_amount:   pl.premium_amount,
+      policy_date_back: pl.policy_date_back || pd7.backdating_date
+    };
+
+    // Riders: check both riders{} and riders_selected{} (lic_form_unfilled page_7)
+    var rd  = sii.riders          || {};
+    var rs7 = sii.riders_selected || {};
+    nsii.riders = {
+      term_assurance_rider:     rd.term_assurance_rider     != null ? rd.term_assurance_rider     : rs7.new_term_assurance_rider,
+      term_assurance_rider_sa:  rd.term_assurance_rider_sa  || pd7.term_rider_sum_assured,
+      critical_illness_rider:   rd.critical_illness_rider   != null ? rd.critical_illness_rider   : rs7.new_critical_illness_benefit_rider,
+      critical_illness_rider_sa: rd.critical_illness_rider_sa || pd7.ci_rider_sum_assured,
+      pwb_rider:                rd.pwb_rider                != null ? rd.pwb_rider                : rs7.premium_waiver_benefit_rider,
+      accident_benefit_rider:   rd.accident_benefit_rider   != null ? rd.accident_benefit_rider   : rs7.accident_benefit_rider_ab,
+      addb_rider:               rd.addb_rider               != null ? rd.addb_rider               : rs7.accidental_death_disability_benefit_rider_addb,
+      accident_benefit_sa:      rd.accident_benefit_sa      || rd.addb_rider_sa || pd7.accident_benefit_sum_assured
+    };
+
+    // Police: check police_personnel{} and police_duty_details{} (lic_form_unfilled page_8)
+    var pp  = sii.police_personnel    || {};
+    var pdd = sii.police_duty_details || {};
+    nsii.police_personnel = {
+      is_police:     pp.is_police     != null ? pp.is_police     : pdd.engaged_in_police_duty,
+      on_duty_rider: pp.on_duty_rider != null ? pp.on_duty_rider : pdd.wish_to_avail_rider_on_duty
+    };
+
+    // SSS
+    var sss  = sii.sss_details        || {};
+    var sssp = sii.sss_policy_details || {};
+    nsii.sss_details = {
+      authority: sss.authority || sssp.paying_authority_code_and_dept_no,
+      badge_no:  sss.badge_no  || sssp.badge_or_sr_no
+    };
+
+    nsii.pwb_agreement = sii.pwb_agreement;
+
+    // Simultaneous proposals
+    var sp       = sii.simultaneous_proposals || {};
+    var spOther  = sp.other_proposal_under_consideration  || {};
+    var spSpouse = sp.proposed_with_spouse_or_children    || {};
+    nsii.simultaneous_proposals = {
+      any_pending:     sp.any_pending     != null ? sp.any_pending     : toBool(spOther.has_proposal),
+      spouse_proposal: sp.spouse_proposal != null ? sp.spouse_proposal : toBool(spSpouse.has_proposal)
+    };
+
+    // Settlement options
+    var smObj = typeof sii.settlement_option_maturity === 'object' ? sii.settlement_option_maturity : {};
+    var sdObj = typeof sii.settlement_option_death    === 'object' ? sii.settlement_option_death    : {};
+    nsii.settlement_option_maturity = typeof sii.settlement_option_maturity === 'boolean' ? sii.settlement_option_maturity : toBool(smObj.wish_to_avail);
+    nsii.settlement_option_death    = typeof sii.settlement_option_death    === 'boolean' ? sii.settlement_option_death    : toBool(sdObj.wish_to_avail);
+    nsii.lic_portal_registered      = typeof sii.lic_portal_registered     === 'boolean' ? sii.lic_portal_registered      : toBool(sii.lic_portal_registered);
+
+    out.section_ii = nsii;
+  }
+
+  /* ── section_iii ────────────────────────────── */
+  var siii = raw.section_iii;
+  if (siii) {
+    var nsiii = {};
+
+    // Physical metrics
+    var phR = siii.personal_health || {};
+    var pmR = siii.physical_metrics || {};
+    var nph = Object.assign({}, phR);
+    nph.height_cm = phR.height_cm || pmR.height_cm;
+    nph.weight_kg = phR.weight_kg || pmR.weight_kg;
+
+    // Medical history questions (lic_form_unfilled page_10 naming)
+    var mhq = siii.medical_history_questions || {};
+    var qConsult = mhq.consulted_practitioner_last_5_years          || {};
+    var qAdmit   = mhq.admitted_to_hospital_last_5_years            || {};
+    var qAbsent  = mhq.absent_from_work_health_grounds_last_5_years || {};
+    if (nph.medical_consultation_5yrs === undefined) nph.medical_consultation_5yrs = toBool(qConsult.has_consulted);
+    if (nph.hospital_admission         === undefined) nph.hospital_admission         = toBool(qAdmit.was_admitted);
+    if (nph.absence_from_work          === undefined) nph.absence_from_work          = toBool(qAbsent.was_absent);
+
+    // Ailment checklists (pages 10 + 11)
+    var ac10 = siii.ailment_checklist            || {};
+    var ac11 = siii.additional_ailment_checklist || {};
+    if (!nph.diseases) nph.diseases = {};
+    var dis = nph.diseases;
+    function setDis(k, v) { if (dis[k] === undefined) dis[k] = toBool(v); }
+    setDis('lungs_respiratory',  ac10.respiratory_or_persistent_cough);
+    setDis('hypertension',       ac10.hypertension_heart_or_arteries_disease);
+    setDis('digestive',          ac10.digestive_or_glandular_disorder);
+    setDis('kidney_urinary',     ac10.kidney_or_urinary_system_disease);
+    setDis('neurological',       ac10.neurological_or_brain_disorder);
+    setDis('hernia_venereal',    ac10.hernia_or_venereal_disease);
+    setDis('cancer',             ac11.cancer_leukemia_lymphoma_tumour_cyst_blood_disorder);
+    setDis('eyes_ent',           ac11.ear_nose_throat_or_eye_disease);
+    setDis('diabetes_endocrine', ac11.endocrine_disorders_diabetes_goitre_thyroid);
+    setDis('bone_joint',         ac11.bone_joint_spine_arthritis);
+    setDis('mental',             ac11.mental_disorder_depression_anxiety);
+    setDis('infectious',         ac11.chronic_infections_tuberculosis_pleurisy_skin_disease_leprosy);
+    setDis('hepatitis_aids',     ac11.hepatitis_aids_hiv);
+    setDis('operations_injuries', ac11.operation_accident_injury_bodily_defect_deformity);
+    setDis('other',              ac11.any_other_disease);
+
+    // Medical history table → disease_details
+    var mht = siii.medical_history_table || [];
+    if (!nph.disease_details && mht.length) {
+      nph.disease_details = mht.map(function(r) {
+        var tx = r.still_on_treatment || {};
+        return { nature: r.nature_of_disease, date: r.date_of_diagnosis,
+                 recovered: r.fully_recovered, treatment: tx.treatment_details,
+                 doctor_name: r.doctor_hospital_details };
+      });
+    }
+    nsiii.personal_health = nph;
+
+    // Personal habits
+    var hb   = siii.personal_habits || {};
+    var alc  = (typeof hb.alcohol  === 'object' && hb.alcohol)  || hb.alcoholic_drinks || {};
+    var narc = (typeof hb.narcotics === 'object' && hb.narcotics) || {};
+    var odrug = (typeof hb.other_drugs === 'object' && hb.other_drugs) || {};
+    var tob  = (typeof hb.tobacco  === 'object' && hb.tobacco)  || hb.tobacco_consumption_last_60_months || {};
+    nsiii.personal_habits = {
+      alcohol:          typeof hb.alcohol   === 'boolean' ? hb.alcohol   : toBool(alc.consumes),
+      alcohol_qty:      hb.alcohol_qty      || alc.quantity_and_duration,
+      alcohol_stopped:  hb.alcohol_stopped  || alc.stopped_since_months,
+      narcotics:        typeof hb.narcotics === 'boolean' ? hb.narcotics : toBool(narc.consumes),
+      narcotics_qty:    hb.narcotics_qty    || narc.quantity_and_duration,
+      narcotics_stopped: hb.narcotics_stopped || narc.stopped_since_months,
+      other_drugs:      typeof hb.other_drugs === 'boolean' ? hb.other_drugs : toBool(odrug.consumes),
+      other_drugs_qty:  hb.other_drugs_qty  || odrug.quantity_and_duration,
+      other_drugs_stopped: hb.other_drugs_stopped || odrug.stopped_since_months,
+      tobacco:          typeof hb.tobacco   === 'boolean' ? hb.tobacco   : toBool(tob.consumes),
+      tobacco_qty:      hb.tobacco_qty      || tob.quantity_and_duration,
+      tobacco_stopped:  hb.tobacco_stopped  || tob.stopped_since_months
+    };
+
+    nsiii.present_health_state = siii.present_health_state || siii.usual_health_status;
+
+    // Family health
+    var fh    = siii.family_health || {};
+    var fhTab = siii.family_history_table || [];
+    var nfh   = Object.assign({}, fh);
+    if (fhTab.length && !fh.father) {
+      var fhMap = {};
+      fhTab.forEach(function(row) {
+        var rel = (row.relation || '').toLowerCase();
+        fhMap[rel] = { age_if_alive: row.status === 'Alive' ? row.age : undefined,
+                       health: row.state_of_health,
+                       age_at_death:   row.status === 'Dead' ? row.age_at_death : undefined,
+                       cause_of_death: row.year_or_cause_of_death };
+      });
+      nfh.father = fhMap['father'] || {};
+      nfh.mother = fhMap['mother'] || {};
+      nfh.spouse = fhMap['spouse'] || {};
+    }
+    var fhHist = siii.family_details_illness_history || {};
+    if (nfh.any_hereditary_disease === undefined && fhHist.has_history !== undefined)
+      nfh.any_hereditary_disease = fhHist.has_history;
+    nsiii.family_health = nfh;
+
+    out.section_iii = nsiii;
+  }
+
+  /* ── section_iv ─────────────────────────────── */
+  var siv = raw.section_iv;
+  if (siv) {
+    var nsiv = {};
+    var eiRaw = siv.existing_insurance;
+    var eiArr = Array.isArray(eiRaw) ? eiRaw
+              : (eiRaw && Array.isArray(eiRaw.policies)) ? eiRaw.policies
+              : Array.isArray(siv.existing_insurance_table) ? siv.existing_insurance_table
+              : [];
+    nsiv.existing_insurance = {
+      policies: eiArr.map(function(p) {
+        return { policy_no:         p.policy_no         || p.policy_number,
+                 insurer:           p.insurer            || p.insurer_name  || p.insurer_name_division_branch,
+                 plan_name:         p.plan_name          || p.plan_and_term,
+                 sum_assured:       p.sum_assured,
+                 term_rider_sa:     p.term_rider_sa      || p.term_rider_sum_assured,
+                 ci_rider_sa:       p.ci_rider_sa        || p.ci_rider_sum_assured,
+                 ab_addb_sa:        p.ab_addb_sa         || p.ab_addb_sum_assured,
+                 commencement_date: p.commencement_date  || p.date_of_commencement,
+                 revival_date:      p.revival_date       || p.date_of_revival,
+                 accepted:          p.accepted           || p.accepted_at_ordinary_rate,
+                 accepted_details:  p.accepted_details   || p.details_if_not_ordinary_rate,
+                 medical_type:      p.medical_type       || p.medical_non_medical,
+                 inforce:           p.inforce            || p.in_force,
+                 fup_surrender_date: p.fup_surrender_date || p.date_of_fup_or_surrender };
+      }),
+      q14a_proposals_declined: eiRaw && eiRaw.q14a_proposals_declined,
+      q14b_policy_lapsed:      eiRaw && eiRaw.q14b_policy_lapsed,
+      q14c_policy_assignment:  eiRaw && eiRaw.q14c_policy_assignment,
+      q14d_other_proposals:    eiRaw && eiRaw.q14d_other_proposals
+    };
+    // Also pick up q14 from proposal_history (lic_form_unfilled page_5)
+    var ph5 = siv.proposal_history || {};
+    var phd = ph5.proposal_details || {};
+    if (nsiv.existing_insurance.q14a_proposals_declined == null && ph5.has_other_proposals != null)
+      nsiv.existing_insurance.q14a_proposals_declined = toBool(ph5.has_other_proposals);
+
+    // Nominees
+    var nom    = siv.nominee || {};
+    var nomDet = siv.nominee_details || {};
+    var nomArr = Array.isArray(siv.nominee_details) ? siv.nominee_details
+               : (nom.nominees && Array.isArray(nom.nominees)) ? nom.nominees
+               : [];
+    nsiv.nominee = {
+      nomination_type: nom.nomination_type || (typeof nomDet === 'object' && nomDet.nomination_type),
+      nominees: nomArr.map(function(n) {
+        var ap = n.appointee_details || {};
+        return { name:          n.name          || n.nominee_name_and_address,
+                 share_percent: n.share_percent  || n.percentage_share,
+                 age:           n.age,
+                 relationship:  n.relationship   || n.relationship_with_life_to_be_assured,
+                 appointee_name: n.appointee_name || ap.full_name,
+                 appointee_rel:  n.appointee_rel  || ap.relationship_to_nominee,
+                 id_type:        n.id_type,
+                 id_number:      n.id_number };
+      })
+    };
+
+    // Declaration
+    var decl  = siv.declaration       || {};
+    var declD = siv.declaration_date  || {};
+    nsiv.declaration = Object.assign({}, decl);
+    if (!decl.date && (declD.year || declD.day)) {
+      nsiv.declaration.date = (declD.year || '') + '-' + (declD.month || '') + '-' + (declD.day || '');
+    }
+    // la_name from declaration_section.applicant_name (lic_form_unfilled page_13)
+    var declSec = siv.declaration_section || {};
+    if (!nsiv.declaration.la_name && declSec.applicant_name) nsiv.declaration.la_name = declSec.applicant_name;
+
+    // Witness
+    var wit  = siv.witness         || {};
+    var witD = siv.witness_details || {};
+    nsiv.witness = { name:       wit.name       || witD.name,
+                     occupation: wit.occupation || witD.occupation,
+                     address:    wit.address    || witD.address };
+
+    out.section_iv = nsiv;
+  }
+
+  /* ── pass-through sections ──────────────────── */
+  ['addendum_1_settlement_maturity', 'addendum_2_death_benefit_instalments',
+   'addendum_plan_specific', 'moral_hazard_report',
+   'insurance_suitability_questionnaire', 'annexure_i'
+  ].forEach(function(k) { if (raw[k]) out[k] = raw[k]; });
+
+  return out;
+}
+
+/* ════════════════════════════════════════════════
    fillFromJson(data)
    Auto-populate the entire form from a JSON object
    matching schema.json.  Call this after PDF parsing:
@@ -603,6 +994,7 @@ function addFHChildRow() {
    ════════════════════════════════════════════════ */
 function fillFromJson(data) {
   if (!data) return;
+  data = normalizePdfJson(data);
 
   /* ── Internal helpers ────────────────────────── */
   function v(selector, val) {
