@@ -1268,8 +1268,17 @@ function startPdfParse() {
 
         case 'page_done':
           donePages++;
+          var fInfo = evt.fields_extracted != null ? ' · ' + evt.fields_extracted + ' field(s)' : '';
           if (progressTxt) progressTxt.textContent =
-            'Page ' + evt.page + ' extracted  (' + donePages + ' / ' + totalPages + ')';
+            'Page ' + evt.page + ' extracted' + fInfo + '  (' + donePages + ' / ' + totalPages + ')';
+          if (progressBar) progressBar.style.width =
+            (Math.round((donePages / (totalPages || 1)) * 85) + 5) + '%';
+          break;
+
+        case 'page_skipped':
+          donePages++;
+          if (progressTxt) progressTxt.textContent =
+            'Page ' + evt.page + ' skipped (info-only)  (' + donePages + ' / ' + totalPages + ')';
           if (progressBar) progressBar.style.width =
             (Math.round((donePages / (totalPages || 1)) * 85) + 5) + '%';
           break;

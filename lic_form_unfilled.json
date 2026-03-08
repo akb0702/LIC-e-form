@@ -1,0 +1,2972 @@
+{
+    "title": "LIC Form 300 - Corrected & Reconciled Schema (All 28 Pages)",
+    "version": "2.0",
+    "description": "Reconciled schema incorporating all gaps found between original schema and filled form data",
+    "page_1": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "AgentAndOfficeDetails",
+        "type": "object",
+        "properties": {
+            "latest_photo": {
+                "type": "string",
+                "description": "Passport size photograph of the Life to be Assured"
+            },
+            "agent_intermediary_details": {
+                "type": "object",
+                "title": "To be filled by Agent / Intermediary",
+                "properties": {
+                    "do_clia_chief_organizer_code": {
+                        "type": "string"
+                    },
+                    "mobile_number": {
+                        "type": "string"
+                    },
+                    "agent_name": {
+                        "type": "string"
+                    },
+                    "agent_code": {
+                        "type": "string"
+                    },
+                    "agent_mobile_number": {
+                        "type": "string"
+                    },
+                    "licence_registration_no": {
+                        "type": "string"
+                    },
+                    "date_of_expiry": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                }
+            },
+            "office_use_only": {
+                "type": "object",
+                "title": "For Office Use Only",
+                "properties": {
+                    "inward_no": {
+                        "type": "string"
+                    },
+                    "inward_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "proposal_no": {
+                        "type": "string"
+                    },
+                    "amt_of_deposit": {
+                        "type": "number"
+                    },
+                    "boc_no": {
+                        "type": "string"
+                    },
+                    "boc_date": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                }
+            }
+        }
+    },
+    "page_2": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "LifeToBeAssuredDetails",
+        "type": "object",
+        "properties": {
+            "customer_id": {
+                "type": "string"
+            },
+            "ckyc_number": {
+                "type": "string"
+            },
+            "personal_details": {
+                "type": "object",
+                "properties": {
+                    "prefix": {
+                        "type": "string",
+                        "enum": [
+                            "Mr.",
+                            "Mrs.",
+                            "Ms.",
+                            "Mx."
+                        ]
+                    },
+                    "first_name": {
+                        "type": "string"
+                    },
+                    "middle_name": {
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "father_full_name": {
+                "type": "string"
+            },
+            "mother_full_name": {
+                "type": "string"
+            },
+            "gender": {
+                "type": "string",
+                "enum": [
+                    "Male",
+                    "Female",
+                    "Transgender"
+                ]
+            },
+            "marital_status": {
+                "type": "string"
+            },
+            "spouse_full_name": {
+                "type": "string"
+            },
+            "date_of_birth": {
+                "type": "string",
+                "format": "date"
+            },
+            "age": {
+                "type": "integer"
+            },
+            "place_of_birth": {
+                "type": "string"
+            },
+            "nature_of_age_proof": {
+                "type": "string"
+            },
+            "nationality": {
+                "type": "string"
+            },
+            "citizenship": {
+                "type": "string"
+            },
+            "permanent_address": {
+                "type": "object",
+                "properties": {
+                    "house_building_name_street": {
+                        "type": "string"
+                    },
+                    "town_village_taluka": {
+                        "type": "string"
+                    },
+                    "district": {
+                        "type": "string"
+                    },
+                    "state_country": {
+                        "type": "string"
+                    },
+                    "pin_code": {
+                        "type": "string"
+                    },
+                    "tel_no_with_std": {
+                        "type": "string"
+                    }
+                }
+            },
+            "correspondence_address": {
+                "type": "object",
+                "description": "Current Address if different from permanent address",
+                "properties": {
+                    "house_building_name_street": {
+                        "type": "string"
+                    },
+                    "town_village_taluka": {
+                        "type": "string"
+                    },
+                    "district": {
+                        "type": "string"
+                    },
+                    "state_country": {
+                        "type": "string"
+                    },
+                    "pin_code": {
+                        "type": "string"
+                    },
+                    "tel_no_with_std": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "required": [
+            "personal_details",
+            "gender",
+            "date_of_birth",
+            "permanent_address"
+        ]
+    },
+    "page_3": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "KYCAndOccupationDetails",
+        "type": "object",
+        "properties": {
+            "residential_status_info": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "Resident Indian",
+                            "Non Resident Indian",
+                            "Foreign National of Indian Origin"
+                        ]
+                    },
+                    "holding_oci_card": {
+                        "type": "boolean"
+                    },
+                    "address_outside_india": {
+                        "type": "object",
+                        "description": "Applicable only for NRI/FNIO",
+                        "properties": {
+                            "house_building_name_street": {
+                                "type": "string"
+                            },
+                            "town_village_taluka": {
+                                "type": "string"
+                            },
+                            "city_district": {
+                                "type": "string"
+                            },
+                            "state_country": {
+                                "type": "string"
+                            },
+                            "pin_code": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "kyc_pmla_details": {
+                "type": "object",
+                "properties": {
+                    "is_income_tax_assessee": {
+                        "type": "boolean"
+                    },
+                    "pan_number": {
+                        "type": "string",
+                        "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$"
+                    },
+                    "gst_registered": {
+                        "type": "object",
+                        "properties": {
+                            "is_registered": {
+                                "type": "boolean"
+                            },
+                            "gstin": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "id_details": {
+                        "type": "object",
+                        "properties": {
+                            "proof_of_identity": {
+                                "type": "string",
+                                "enum": [
+                                    "Aadhar",
+                                    "Driving Licence",
+                                    "Voter ID",
+                                    "Passport"
+                                ]
+                            },
+                            "id_number": {
+                                "type": "string"
+                            },
+                            "expiry_date": {
+                                "type": "string",
+                                "format": "date"
+                            }
+                        }
+                    },
+                    "proof_of_correspondence_address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "occupation_details": {
+                "type": "object",
+                "properties": {
+                    "educational_qualification": {
+                        "type": "string"
+                    },
+                    "present_occupation": {
+                        "type": "string"
+                    },
+                    "source_of_income": {
+                        "type": "string"
+                    },
+                    "name_of_present_employer": {
+                        "type": "string"
+                    },
+                    "exact_nature_of_duties": {
+                        "type": "string"
+                    },
+                    "length_of_service": {
+                        "type": "string"
+                    },
+                    "annual_income": {
+                        "type": "string"
+                    },
+                    "armed_forces_employment": {
+                        "type": "object",
+                        "description": "To be answered if employed in the Armed Forces",
+                        "properties": {
+                            "wing": {
+                                "type": "string"
+                            },
+                            "rank": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "page_4": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "MedicalLegalAndInsuranceDetails",
+        "type": "object",
+        "properties": {
+            "medical_history_additional": {
+                "type": "object",
+                "properties": {
+                    "last_medical_examination_date": {
+                        "type": "string"
+                    },
+                    "medical_examination_category": {
+                        "type": "string"
+                    },
+                    "below_a1_category": {
+                        "type": "object",
+                        "properties": {
+                            "was_ever_below_a1": {
+                                "type": "boolean"
+                            },
+                            "if_so_when": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "other_disclosures": {
+                "type": "object",
+                "properties": {
+                    "hazardous_occupation_or_hobby": {
+                        "type": "object",
+                        "properties": {
+                            "has_hazardous_activities": {
+                                "type": "boolean"
+                            },
+                            "details": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "legal_criminal_proceedings": {
+                        "type": "object",
+                        "properties": {
+                            "has_legal_proceedings": {
+                                "type": "boolean"
+                            },
+                            "details": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "politically_exposed_person": {
+                        "type": "object",
+                        "properties": {
+                            "is_pep": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            },
+            "existing_insurance": {
+                "type": "array",
+                "description": "List of existing insurance policies — empty array if none",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "policy_number": {
+                            "type": "string"
+                        },
+                        "insurer_name": {
+                            "type": "string"
+                        },
+                        "sum_assured": {
+                            "type": "number"
+                        },
+                        "status": {
+                            "type": "string",
+                            "enum": [
+                                "Active",
+                                "Surrendered",
+                                "Lapsed"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "page_5": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "InsurancePolicyAndNominationDetails",
+        "type": "object",
+        "properties": {
+            "existing_insurance_table": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "policy_number": {
+                            "type": "string"
+                        },
+                        "insurer_name_division_branch": {
+                            "type": "string"
+                        },
+                        "plan_and_term": {
+                            "type": "string"
+                        },
+                        "sum_assured": {
+                            "type": "string"
+                        },
+                        "term_rider_sum_assured": {
+                            "type": "string"
+                        },
+                        "ci_rider_sum_assured": {
+                            "type": "string"
+                        },
+                        "ab_addb_sum_assured": {
+                            "type": "string"
+                        },
+                        "date_of_commencement": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "date_of_revival": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "format": "date"
+                        },
+                        "accepted_at_ordinary_rate": {
+                            "type": "string"
+                        },
+                        "details_if_not_ordinary_rate": {
+                            "type": "string"
+                        },
+                        "medical_non_medical": {
+                            "type": "string"
+                        },
+                        "in_force": {
+                            "type": "string"
+                        },
+                        "date_of_fup_or_surrender": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "proposal_history": {
+                "type": "object",
+                "properties": {
+                    "has_other_proposals": {
+                        "type": "string"
+                    },
+                    "proposal_details": {
+                        "type": "object",
+                        "properties": {
+                            "withdrawn_deferred_dropped_declined": {
+                                "type": "string"
+                            },
+                            "accepted_with_extra_premium_or_lien": {
+                                "type": "string"
+                            },
+                            "accepted_on_different_terms": {
+                                "type": "string"
+                            },
+                            "not_acceptable_to_you": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "nominee_details": {
+                "type": "object",
+                "properties": {
+                    "nomination_type": {
+                        "type": "string",
+                        "enum": [
+                            "Single",
+                            "Multiple"
+                        ]
+                    },
+                    "nominee_share_percentage": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "page_6": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "NominationBankAndContactDetails",
+        "type": "object",
+        "properties": {
+            "nominee_details": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "nominee_name_and_address": {
+                            "type": "string"
+                        },
+                        "percentage_share": {
+                            "type": "number"
+                        },
+                        "age": {
+                            "type": "integer"
+                        },
+                        "relationship_with_life_to_be_assured": {
+                            "type": "string"
+                        },
+                        "appointee_details": {
+                            "type": "object",
+                            "description": "Required if nominee is a minor",
+                            "properties": {
+                                "full_name": {
+                                    "type": "string"
+                                },
+                                "age": {
+                                    "type": [
+                                        "integer",
+                                        "string"
+                                    ]
+                                },
+                                "address": {
+                                    "type": "string"
+                                },
+                                "relationship_to_nominee": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "nominee_id_proof": {
+                "type": "object",
+                "properties": {
+                    "proof_type": {
+                        "type": "string"
+                    },
+                    "id_number": {
+                        "type": "string"
+                    }
+                }
+            },
+            "bank_details": {
+                "type": "object",
+                "properties": {
+                    "account_type": {
+                        "type": "string",
+                        "enum": [
+                            "Savings",
+                            "Current"
+                        ]
+                    },
+                    "account_number": {
+                        "type": "string"
+                    },
+                    "micr_code": {
+                        "type": "string"
+                    },
+                    "ifsc_code": {
+                        "type": "string"
+                    },
+                    "bank_name_and_address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "tax_residency": {
+                "type": "object",
+                "properties": {
+                    "is_tax_resident_outside_india": {
+                        "type": "string"
+                    }
+                }
+            },
+            "applicant_contact_details": {
+                "type": "object",
+                "properties": {
+                    "mobile_number": {
+                        "type": "string",
+                        "pattern": "^[0-9]{10}$"
+                    },
+                    "email_id": {
+                        "type": "string",
+                        "format": "email"
+                    }
+                }
+            },
+            "signature_of_life_to_be_assured": {
+                "type": "string",
+                "description": "ADDED: Signature of the life to be assured — present in filled form, was missing from original schema"
+            }
+        }
+    },
+    "page_7": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "ProposalAndRiderDetails",
+        "description": "CORRECTED: Original schema for pg7 was misaligned — it covered police/SSS fields. This page actually contains the core proposal details including riders and plan.",
+        "type": "object",
+        "properties": {
+            "insurance_objective": {
+                "type": "string",
+                "description": "ADDED: Objective of insurance e.g. Risk Cover, Savings etc."
+            },
+            "proposal_type": {
+                "type": "string",
+                "enum": [
+                    "Individual",
+                    "Keyman"
+                ],
+                "description": "ADDED: Type of proposal"
+            },
+            "riders_selected": {
+                "type": "object",
+                "description": "ADDED: Rider selection checkboxes",
+                "properties": {
+                    "new_term_assurance_rider": {
+                        "type": "boolean"
+                    },
+                    "new_critical_illness_benefit_rider": {
+                        "type": "boolean"
+                    },
+                    "premium_waiver_benefit_rider": {
+                        "type": "boolean"
+                    },
+                    "accident_benefit_rider_ab": {
+                        "type": "boolean"
+                    },
+                    "accidental_death_disability_benefit_rider_addb": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "plan_details": {
+                "type": "array",
+                "description": "ADDED: Plan details table",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "term_and_premium_paying_term": {
+                            "type": "string"
+                        },
+                        "sum_assured": {
+                            "type": "number"
+                        },
+                        "mode_of_premium": {
+                            "type": "string"
+                        },
+                        "term_rider_sum_assured": {
+                            "type": "number"
+                        },
+                        "ci_rider_sum_assured": {
+                            "type": "number"
+                        },
+                        "accident_benefit_sum_assured": {
+                            "type": "number"
+                        },
+                        "backdating_date": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "police_duty_applicable": {
+                "type": "string",
+                "description": "Whether police duty rider is applicable"
+            }
+        }
+    },
+    "page_8": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "AdditionalInsuranceDeclarations",
+        "type": "object",
+        "properties": {
+            "police_duty_details": {
+                "type": "object",
+                "properties": {
+                    "engaged_in_police_duty": {
+                        "type": "boolean"
+                    },
+                    "wish_to_avail_rider_on_duty": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "sss_policy_details": {
+                "type": "object",
+                "properties": {
+                    "paying_authority_code_and_dept_no": {
+                        "type": "string"
+                    },
+                    "badge_or_sr_no": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "premium_waiver_benefit_minor": {
+                "type": "object",
+                "properties": {
+                    "agree_to_terms": {
+                        "type": "string"
+                    }
+                }
+            },
+            "simultaneous_proposals": {
+                "type": "object",
+                "properties": {
+                    "other_proposal_under_consideration": {
+                        "type": "object",
+                        "properties": {
+                            "has_proposal": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
+                    "proposed_with_spouse_or_children": {
+                        "type": "object",
+                        "properties": {
+                            "has_proposal": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "page_9": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "SettlementOptionsAndPortalRegistration",
+        "description": "CORRECTED: Original schema treated this as a health page. Actual page 9 contains settlement options and portal registration.",
+        "type": "object",
+        "properties": {
+            "settlement_option_maturity": {
+                "type": "object",
+                "description": "ADDED: Whether proposer wishes to avail settlement option for maturity benefit",
+                "properties": {
+                    "wish_to_avail": {
+                        "type": "string",
+                        "enum": [
+                            "YES",
+                            "NO"
+                        ]
+                    }
+                }
+            },
+            "settlement_option_death_instalment": {
+                "type": "object",
+                "description": "ADDED: Whether proposer wishes to avail death benefit in instalments",
+                "properties": {
+                    "wish_to_avail": {
+                        "type": "string",
+                        "enum": [
+                            "YES",
+                            "NO"
+                        ]
+                    }
+                }
+            },
+            "lic_portal_registered": {
+                "type": "string",
+                "description": "ADDED: Whether proposer is registered on LIC portal",
+                "enum": [
+                    "YES",
+                    "NO"
+                ]
+            },
+            "signature": {
+                "type": "string",
+                "description": "ADDED: Signature of proposer"
+            }
+        }
+    },
+    "page_10": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "PersonalHealthDetails",
+        "type": "object",
+        "properties": {
+            "physical_metrics": {
+                "type": "object",
+                "properties": {
+                    "height_cm": {
+                        "type": "number"
+                    },
+                    "weight_kg": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "height_cm",
+                    "weight_kg"
+                ]
+            },
+            "medical_history_questions": {
+                "type": "object",
+                "properties": {
+                    "consulted_practitioner_last_5_years": {
+                        "type": "object",
+                        "properties": {
+                            "has_consulted": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
+                    "admitted_to_hospital_last_5_years": {
+                        "type": "object",
+                        "properties": {
+                            "was_admitted": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
+                    "absent_from_work_health_grounds_last_5_years": {
+                        "type": "object",
+                        "properties": {
+                            "was_absent": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "ailment_checklist": {
+                "type": "object",
+                "properties": {
+                    "respiratory_or_persistent_cough": {
+                        "type": "string"
+                    },
+                    "hypertension_heart_or_arteries_disease": {
+                        "type": "string"
+                    },
+                    "digestive_or_glandular_disorder": {
+                        "type": "string"
+                    },
+                    "kidney_or_urinary_system_disease": {
+                        "type": "string"
+                    },
+                    "neurological_or_brain_disorder": {
+                        "type": "string"
+                    },
+                    "hernia_or_venereal_disease": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "page_11": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "MedicalHistoryAndPersonalHabits",
+        "type": "object",
+        "properties": {
+            "additional_ailment_checklist": {
+                "type": "object",
+                "description": "ADDED: Second set of ailment checkboxes continuing from page 10",
+                "properties": {
+                    "cancer_leukemia_lymphoma_tumour_cyst_blood_disorder": {
+                        "type": "string"
+                    },
+                    "ear_nose_throat_or_eye_disease": {
+                        "type": "string"
+                    },
+                    "endocrine_disorders_diabetes_goitre_thyroid": {
+                        "type": "string"
+                    },
+                    "bone_joint_spine_arthritis": {
+                        "type": "string"
+                    },
+                    "mental_disorder_depression_anxiety": {
+                        "type": "string"
+                    },
+                    "chronic_infections_tuberculosis_pleurisy_skin_disease_leprosy": {
+                        "type": "string"
+                    },
+                    "hepatitis_aids_hiv": {
+                        "type": "string"
+                    },
+                    "operation_accident_injury_bodily_defect_deformity": {
+                        "type": "string"
+                    },
+                    "any_other_disease": {
+                        "type": "string"
+                    }
+                }
+            },
+            "medical_history_table": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "nature_of_disease": {
+                            "type": "string"
+                        },
+                        "date_of_diagnosis": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "fully_recovered": {
+                            "type": "string"
+                        },
+                        "still_on_treatment": {
+                            "type": "object",
+                            "properties": {
+                                "is_on_treatment": {
+                                    "type": "string"
+                                },
+                                "treatment_details": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                }
+                            }
+                        },
+                        "doctor_hospital_details": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "personal_habits": {
+                "type": "object",
+                "properties": {
+                    "alcoholic_drinks": {
+                        "type": "object",
+                        "properties": {
+                            "consumes": {
+                                "type": "boolean"
+                            },
+                            "quantity_and_duration": {
+                                "type": "string"
+                            },
+                            "stopped_since_months": {
+                                "type": [
+                                    "integer",
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
+                    "narcotics": {
+                        "type": "object",
+                        "properties": {
+                            "consumes": {
+                                "type": "boolean"
+                            },
+                            "quantity_and_duration": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "stopped_since_months": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
+                    "other_drugs": {
+                        "type": "object",
+                        "properties": {
+                            "consumes": {
+                                "type": [
+                                    "boolean",
+                                    "string"
+                                ]
+                            },
+                            "which_drug": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "quantity_and_duration": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "stopped_since_months": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
+                    "tobacco_consumption_last_60_months": {
+                        "type": "object",
+                        "properties": {
+                            "consumes": {
+                                "type": "string"
+                            },
+                            "daily_consumption_sticks_packets_g_gms": {
+                                "type": "number"
+                            },
+                            "quantity_and_duration": {
+                                "type": "string"
+                            },
+                            "stopped_since_months": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "page_12": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "HealthAndFamilyDetails",
+        "type": "object",
+        "properties": {
+            "usual_health_status": {
+                "type": "string",
+                "enum": [
+                    "Excellent",
+                    "Good",
+                    "Under Treatment",
+                    "Poor"
+                ]
+            },
+            "family_details_illness_history": {
+                "type": "object",
+                "properties": {
+                    "has_history": {
+                        "type": "boolean"
+                    },
+                    "details": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "disease_name": {
+                                    "type": "string"
+                                },
+                                "relationship_to_insured": {
+                                    "type": "string"
+                                },
+                                "date_of_death": {
+                                    "type": "string",
+                                    "format": "date"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "family_history_table": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "relation": {
+                            "type": "string",
+                            "enum": [
+                                "Father",
+                                "Mother",
+                                "Brothers",
+                                "Sisters",
+                                "Spouse",
+                                "Children"
+                            ]
+                        },
+                        "status": {
+                            "type": "string",
+                            "enum": [
+                                "Alive",
+                                "Dead"
+                            ]
+                        },
+                        "age": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "state_of_health": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "age_at_death": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "year_or_cause_of_death": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    }
+                }
+            },
+            "female_proponents_details": {
+                "type": "object",
+                "description": "Applicable for Female Proponents only — use NA for males",
+                "properties": {
+                    "is_currently_pregnant": {
+                        "type": "string"
+                    },
+                    "date_of_last_delivery": {
+                        "type": "string"
+                    },
+                    "history_of_complications": {
+                        "type": "object",
+                        "properties": {
+                            "has_history": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "page_13": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "FemaleProponentAndDeclaration",
+        "type": "object",
+        "properties": {
+            "gynaecologist_consultation": {
+                "type": "object",
+                "properties": {
+                    "has_consulted_or_treated": {
+                        "type": "string"
+                    },
+                    "consultation_details": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "husband_details": {
+                "type": "object",
+                "description": "Applicable for Female Proponents only — use NA for males",
+                "properties": {
+                    "full_name": {
+                        "type": "string"
+                    },
+                    "occupation": {
+                        "type": "string"
+                    },
+                    "annual_income": {
+                        "type": "string"
+                    }
+                }
+            },
+            "husband_insurance_details": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "policy_number": {
+                            "type": "string"
+                        },
+                        "insurer_name_and_branch": {
+                            "type": "string"
+                        },
+                        "sum_assured": {
+                            "type": "number"
+                        },
+                        "plan_or_term": {
+                            "type": "string"
+                        },
+                        "present_status": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "declaration_section": {
+                "type": "object",
+                "properties": {
+                    "applicant_name": {
+                        "type": "string",
+                        "description": "ADDED: Name of the applicant signing the declaration"
+                    },
+                    "signature_or_thumb_impression": {
+                        "type": "string"
+                    },
+                    "declaration_agreed": {
+                        "type": "boolean",
+                        "description": "Confirmation of agreement to the declaration statements"
+                    }
+                }
+            }
+        }
+    },
+    "page_14": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "DeclarationAndWitnessDetails",
+        "type": "object",
+        "properties": {
+            "declaration_date": {
+                "type": "object",
+                "properties": {
+                    "day": {
+                        "type": "string"
+                    },
+                    "month": {
+                        "type": "string"
+                    },
+                    "year": {
+                        "type": "string"
+                    }
+                }
+            },
+            "witness_details": {
+                "type": "object",
+                "properties": {
+                    "signature_or_thumb_impression": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "occupation": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "life_to_be_assured_signature": {
+                "type": "string"
+            },
+            "applicant_name": {
+                "type": "string",
+                "description": "ADDED: Name of the applicant as printed below signature"
+            },
+            "scribe_declaration": {
+                "type": "object",
+                "description": "Declaration by person filling form (if different language or due to disability)",
+                "properties": {
+                    "is_applicable": {
+                        "type": "boolean"
+                    },
+                    "scribe_name": {
+                        "type": "string"
+                    },
+                    "signature_or_thumb_impression": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "page_15": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "AssistanceDeclarations",
+        "type": "object",
+        "properties": {
+            "declaration_type_1": {
+                "type": "object",
+                "properties": {
+                    "declarant_name": {
+                        "type": "string"
+                    },
+                    "declarant_signature": {
+                        "type": "string"
+                    },
+                    "declarant_address": {
+                        "type": "string"
+                    },
+                    "life_to_be_assured_name": {
+                        "type": "string"
+                    },
+                    "life_to_be_assured_signature": {
+                        "type": "string"
+                    },
+                    "translator_details": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "designation_or_occupation": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "declaration_type_2": {
+                "type": "object",
+                "properties": {
+                    "explained_in_language": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "declarant_signature": {
+                        "type": "string"
+                    },
+                    "declarant_name": {
+                        "type": "string"
+                    },
+                    "declarant_address": {
+                        "type": "string"
+                    },
+                    "life_to_be_assured_signature": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "page_16": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "LegalInformationPage",
+        "type": "object",
+        "properties": {
+            "content_type": {
+                "type": "string",
+                "const": "Informational/Legal"
+            },
+            "note": {
+                "type": "string",
+                "const": "No data entry fields on this page"
+            }
+        }
+    },
+    "page_17": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "InsuranceActProvisions",
+        "type": "object",
+        "properties": {
+            "content_type": {
+                "type": "string",
+                "const": "Informational/Legal"
+            },
+            "note": {
+                "type": "string",
+                "const": "No data entry fields — Insurance Act 1938 provisions only"
+            }
+        }
+    },
+    "page_18": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "AddendumSettlementOptions",
+        "type": "object",
+        "properties": {
+            "maturity_benefit_settlement": {
+                "type": "object",
+                "properties": {
+                    "proposal_no": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "wish_to_avail_option": {
+                        "type": "string"
+                    },
+                    "settlement_period_years": {
+                        "type": "string"
+                    },
+                    "benefit_scope": {
+                        "type": "string",
+                        "enum": [
+                            "Full",
+                            "Part"
+                        ]
+                    },
+                    "part_benefit_details": {
+                        "type": "object",
+                        "properties": {
+                            "absolute_amount": {
+                                "type": "string"
+                            },
+                            "percentage_of_proceeds": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "mode_of_payment": {
+                        "type": "string",
+                        "enum": [
+                            "Yearly",
+                            "Half-Yearly",
+                            "Quarterly",
+                            "Monthly"
+                        ]
+                    },
+                    "place": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "name_of_insured": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "death_benefit_instalment": {
+                "type": "object",
+                "properties": {
+                    "proposal_no": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "wish_to_avail_option": {
+                        "type": "string"
+                    },
+                    "instalment_period_years": {
+                        "type": "string"
+                    },
+                    "benefit_scope": {
+                        "type": "string",
+                        "enum": [
+                            "Full",
+                            "Part"
+                        ]
+                    },
+                    "part_benefit_details": {
+                        "type": "object",
+                        "properties": {
+                            "absolute_amount": {
+                                "type": "string"
+                            },
+                            "percentage_of_proceeds": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "mode_of_payment": {
+                        "type": "string",
+                        "enum": [
+                            "Yearly",
+                            "Half-Yearly",
+                            "Quarterly",
+                            "Monthly"
+                        ]
+                    },
+                    "place": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "name_of_insured": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "life_to_be_assured_signature": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "page_19": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "PlanSpecificAddendumPage1",
+        "type": "object",
+        "properties": {
+            "dhan_sanchay_plan_865": {
+                "type": "object",
+                "properties": {
+                    "premium_payment_type": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "ADDED: Regular/Limited/Single premium payment type"
+                    },
+                    "benefit_option": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "enum": [
+                            "Option A: Level Income Benefit",
+                            "Option B: Increasing Income Benefit",
+                            "Option C: Single Premium Level Income Benefit",
+                            "Option D: Single Premium enhanced cover with Level Income Benefit",
+                            null
+                        ]
+                    },
+                    "amount_of_premium": {
+                        "type": [
+                            "number",
+                            "null"
+                        ]
+                    },
+                    "payout_mode": {
+                        "type": "object",
+                        "description": "CORRECTED: Expanded from single string to checkbox object",
+                        "properties": {
+                            "yearly": {
+                                "type": "boolean"
+                            },
+                            "half_yearly": {
+                                "type": "boolean"
+                            },
+                            "quarterly": {
+                                "type": "boolean"
+                            },
+                            "monthly": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            },
+            "jeevan_azad_plan_868": {
+                "type": "object",
+                "properties": {
+                    "total_existing_sum_assured": {
+                        "type": "string"
+                    },
+                    "is_simultaneous_proposal": {
+                        "type": "string"
+                    },
+                    "simultaneous_proposal_details": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "dhan_vriddhi_plan_869": {
+                "type": "object",
+                "properties": {
+                    "sum_assured_on_death_option": {
+                        "type": "object",
+                        "description": "CORRECTED: Expanded from single string enum to checkbox object",
+                        "properties": {
+                            "option_1_1_25_times_tabular_premium": {
+                                "type": "boolean"
+                            },
+                            "option_2_10_times_tabular_premium": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            },
+            "signatures": {
+                "type": "object",
+                "properties": {
+                    "proposer_signature_thumb_impression": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "life_to_be_assured_signature_thumb_impression": {
+                        "type": "string"
+                    },
+                    "place": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                }
+            }
+        }
+    },
+    "page_20": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "PlanSpecificAddendumPage2",
+        "type": "object",
+        "properties": {
+            "jeevan_kiran_plan_870": {
+                "type": "object",
+                "properties": {
+                    "smoker_status": {
+                        "type": "object",
+                        "description": "CORRECTED: Expanded from single string to checkbox object",
+                        "properties": {
+                            "smoker": {
+                                "type": "boolean"
+                            },
+                            "non_smoker": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            },
+            "jeevan_utsav_plan_871": {
+                "type": "object",
+                "properties": {
+                    "benefit_option": {
+                        "type": "object",
+                        "description": "CORRECTED: Expanded from single string to checkbox object",
+                        "properties": {
+                            "option_1_regular_income_benefit": {
+                                "type": "boolean"
+                            },
+                            "option_2_flexi_income_benefit": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            },
+            "aadhar_stambh_shila_plan_943_944": {
+                "type": "object",
+                "properties": {
+                    "total_existing_sum_assured": {
+                        "type": "string"
+                    },
+                    "is_simultaneous_proposal": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "simultaneous_proposal_details": {
+                        "type": "string"
+                    }
+                }
+            },
+            "new_jeevan_amar_plan_955": {
+                "type": "object",
+                "properties": {
+                    "smoker_status": {
+                        "type": "object",
+                        "description": "CORRECTED: Expanded from single string to checkbox object",
+                        "properties": {
+                            "smoker": {
+                                "type": "boolean"
+                            },
+                            "non_smoker": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "sum_assured_on_death_option": {
+                        "type": "object",
+                        "description": "CORRECTED: Expanded from single string to checkbox object — note both may be ticked, requires human review",
+                        "properties": {
+                            "option_1_level_sum_assured": {
+                                "type": "boolean"
+                            },
+                            "option_2_increasing_sum_assured": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            },
+            "signatures": {
+                "type": "object",
+                "properties": {
+                    "proposer_signature_thumb_impression": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "life_to_be_assured_signature_thumb_impression": {
+                        "type": "string"
+                    },
+                    "place": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                }
+            }
+        }
+    },
+    "page_21": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "AgentConfidentialReport",
+        "type": "object",
+        "properties": {
+            "agent_details": {
+                "type": "object",
+                "properties": {
+                    "agent_name": {
+                        "type": "string"
+                    },
+                    "agent_code_no": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "mobile_number": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "club_membership": {
+                        "type": "string"
+                    },
+                    "license_no": {
+                        "type": "string"
+                    },
+                    "date_of_expiry": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                }
+            },
+            "development_officer_details": {
+                "type": "object",
+                "properties": {
+                    "do_name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "do_code_no": {
+                        "type": "string"
+                    },
+                    "do_mobile_number": {
+                        "type": "string"
+                    }
+                }
+            },
+            "product_related_information": {
+                "type": "object",
+                "properties": {
+                    "name_of_proposer_life_to_be_assured": {
+                        "type": "string"
+                    },
+                    "age_of_proposer_life_to_be_assured": {
+                        "type": "integer"
+                    },
+                    "plan_and_term": {
+                        "type": "string"
+                    },
+                    "sum_assured_in_lakhs": {
+                        "type": "string"
+                    },
+                    "terms_and_conditions_explained": {
+                        "type": "string"
+                    },
+                    "plan_matches_objectives": {
+                        "type": "string"
+                    },
+                    "benefit_illustration_provided": {
+                        "type": "string"
+                    }
+                }
+            },
+            "information_about_proposer": {
+                "type": "object",
+                "properties": {
+                    "how_long_known": {
+                        "type": "string"
+                    },
+                    "is_related": {
+                        "type": "string"
+                    },
+                    "relation_details": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "educational_qualifications": {
+                        "type": "string"
+                    },
+                    "is_fnio_oci_verified": {
+                        "type": "string"
+                    },
+                    "is_politically_exposed_person": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "page_22": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "AgentFinancialAndHealthAssessment",
+        "type": "object",
+        "properties": {
+            "section_ii_continued": {
+                "type": "object",
+                "properties": {
+                    "not_connected_to_terrorist_activities": {
+                        "type": "string"
+                    },
+                    "kyc_pmla_norms_fulfilled": {
+                        "type": "string"
+                    }
+                }
+            },
+            "financial_assessment": {
+                "type": "object",
+                "properties": {
+                    "exact_source_of_income": {
+                        "type": "string"
+                    },
+                    "income_employment_business": {
+                        "type": "string"
+                    },
+                    "income_through_huf": {
+                        "type": "string"
+                    },
+                    "income_through_other_sources": {
+                        "type": "string"
+                    },
+                    "proof_of_income_verified": {
+                        "type": "object",
+                        "description": "CORRECTED: Expanded from flat array to structured object with per-document verification status",
+                        "properties": {
+                            "itr_form_16_26as": {
+                                "type": "object",
+                                "properties": {
+                                    "is_verified": {
+                                        "type": "boolean"
+                                    },
+                                    "details": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "bank_statement": {
+                                "type": "object",
+                                "properties": {
+                                    "is_verified": {
+                                        "type": "boolean"
+                                    },
+                                    "details": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "salary_sheet_with_appointment_letter": {
+                                "type": "object",
+                                "properties": {
+                                    "is_verified": {
+                                        "type": "boolean"
+                                    },
+                                    "details": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "ca_certificate_audited_accounts": {
+                                "type": "object",
+                                "properties": {
+                                    "is_verified": {
+                                        "type": "boolean"
+                                    },
+                                    "details": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "pan_verified_and_compared": {
+                        "type": "string"
+                    },
+                    "pan_number": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "satisfied_with_financial_standing": {
+                        "type": "string"
+                    }
+                }
+            },
+            "previous_insurance_details": {
+                "type": "object",
+                "properties": {
+                    "discussed_previous_policies": {
+                        "type": "string"
+                    },
+                    "aware_of_declined_or_deferred_proposals": {
+                        "type": "string"
+                    }
+                }
+            },
+            "health_habit_occupation": {
+                "type": "object",
+                "properties": {
+                    "general_state_of_health": {
+                        "type": "string"
+                    },
+                    "physical_deformity_or_mental_retardation": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "page_23": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "AgentConfidentialReportFinalPage",
+        "type": "object",
+        "properties": {
+            "health_and_risk_assessment_continued": {
+                "type": "object",
+                "properties": {
+                    "medical_history": {
+                        "type": "string"
+                    },
+                    "height_cms": {
+                        "type": "number"
+                    },
+                    "weight_kgs": {
+                        "type": "number"
+                    },
+                    "risk_factors": {
+                        "type": "string"
+                    },
+                    "other_information": {
+                        "type": "string"
+                    }
+                }
+            },
+            "agent_declaration": {
+                "type": "object",
+                "properties": {
+                    "place": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "signature_seal": {
+                        "type": "string"
+                    }
+                }
+            },
+            "dev_officer_clia_mentor_declaration": {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "designation": {
+                        "type": "string"
+                    },
+                    "standing_years": {
+                        "type": "string"
+                    },
+                    "signature": {
+                        "type": "string"
+                    }
+                }
+            },
+            "branch_official_declaration": {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "designation": {
+                        "type": "string"
+                    },
+                    "signature": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "page_24": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "SuitabilityAnalysisProposerDetails",
+        "type": "object",
+        "properties": {
+            "proposer_details": {
+                "type": "object",
+                "properties": {
+                    "full_name": {
+                        "type": "string"
+                    },
+                    "date_of_birth": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "age": {
+                        "type": "integer"
+                    },
+                    "age_basis": {
+                        "type": "string",
+                        "description": "ADDED: Age basis e.g. NBD (Next Birthday)"
+                    },
+                    "year": {
+                        "type": "string",
+                        "description": "ADDED: Year of age basis"
+                    },
+                    "full_address": {
+                        "type": "string"
+                    },
+                    "marital_status": {
+                        "type": "object",
+                        "description": "CORRECTED: Expanded from single string enum to checkbox object",
+                        "properties": {
+                            "married": {
+                                "type": "boolean"
+                            },
+                            "single": {
+                                "type": "boolean"
+                            },
+                            "widowed": {
+                                "type": "boolean"
+                            },
+                            "divorced": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            },
+            "occupation_details": {
+                "type": "object",
+                "properties": {
+                    "occupation": {
+                        "type": "object",
+                        "description": "CORRECTED: Expanded from single string enum to checkbox object",
+                        "properties": {
+                            "business": {
+                                "type": "boolean"
+                            },
+                            "govt_service": {
+                                "type": "boolean"
+                            },
+                            "pvt_service": {
+                                "type": "boolean"
+                            },
+                            "agriculture": {
+                                "type": "boolean"
+                            },
+                            "housewife": {
+                                "type": "boolean"
+                            },
+                            "student": {
+                                "type": "boolean"
+                            },
+                            "professional": {
+                                "type": "boolean"
+                            },
+                            "nri": {
+                                "type": "boolean"
+                            },
+                            "huf": {
+                                "type": "boolean"
+                            },
+                            "others": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "others_specify": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "income_details": {
+                "type": "object",
+                "properties": {
+                    "annual_income": {
+                        "type": "object",
+                        "properties": {
+                            "employment": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "business_or_profession": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "other_sources": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "huf_income": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "income_of_life_to_be_assured_if_different_from_proposer": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "income_proof": {
+                        "type": "object",
+                        "properties": {
+                            "is_submitted": {
+                                "type": "boolean"
+                            },
+                            "nature_of_documents": {
+                                "type": "object",
+                                "description": "CORRECTED: Expanded from array of strings to checkbox object",
+                                "properties": {
+                                    "it_return": {
+                                        "type": "boolean"
+                                    },
+                                    "salary_certificate": {
+                                        "type": "boolean"
+                                    },
+                                    "ca_certificate": {
+                                        "type": "boolean"
+                                    },
+                                    "profit_and_loss_account": {
+                                        "type": "boolean"
+                                    },
+                                    "property_certificate_issued_by_govt_authority": {
+                                        "type": "boolean"
+                                    },
+                                    "others": {
+                                        "type": "boolean"
+                                    },
+                                    "others_specify": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "tax_status": {
+                        "type": "object",
+                        "properties": {
+                            "is_income_tax_assessee": {
+                                "type": "boolean"
+                            },
+                            "pan_number": {
+                                "type": "string"
+                            },
+                            "tax_bracket_percentage": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "page_25": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "SuitabilityInsuranceFamilyFinancial",
+        "type": "object",
+        "properties": {
+            "previous_insurance_details": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "policy_no": {
+                            "type": "string"
+                        },
+                        "plan_period": {
+                            "type": "string"
+                        },
+                        "year_of_issue": {
+                            "type": "string"
+                        },
+                        "self_dependent": {
+                            "type": "string"
+                        },
+                        "company_branch": {
+                            "type": "string"
+                        },
+                        "sum_assured": {
+                            "type": "string"
+                        },
+                        "term_rider_sa": {
+                            "type": "string"
+                        },
+                        "critical_illness_rider": {
+                            "type": "string"
+                        },
+                        "ab_rider": {
+                            "type": "string"
+                        },
+                        "annualized_premium": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            "family_history": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "relationship": {
+                            "type": "string",
+                            "enum": [
+                                "Father",
+                                "Mother",
+                                "Brother",
+                                "Sister",
+                                "Wife",
+                                "Husband",
+                                "Son",
+                                "Daughter"
+                            ]
+                        },
+                        "is_alive": {
+                            "type": "boolean"
+                        },
+                        "age_if_living": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "state_of_health": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "age_at_death": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "cause_of_death": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        }
+                    }
+                }
+            },
+            "spouse_details": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "occupation": {
+                        "type": "string"
+                    },
+                    "annual_income": {
+                        "type": "string"
+                    }
+                }
+            },
+            "need_analysis": {
+                "type": "object",
+                "properties": {
+                    "total_annual_income": {
+                        "type": "string"
+                    },
+                    "outstanding_liabilities": {
+                        "type": "string"
+                    },
+                    "secured_loan": {
+                        "type": "string"
+                    },
+                    "non_secured_loan": {
+                        "type": "string"
+                    },
+                    "maximum_allowable_insurance": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "page_26": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "SuitabilityObjectivesAndPlanCategorization",
+        "type": "object",
+        "properties": {
+            "object_of_insurance": {
+                "type": "object",
+                "description": "CORRECTED: Expanded from array of strings to checkbox object",
+                "properties": {
+                    "pure_risk_cover": {
+                        "type": "boolean"
+                    },
+                    "risk_coverage_with_savings": {
+                        "type": "boolean"
+                    },
+                    "money_back_with_risk_cover": {
+                        "type": "boolean"
+                    },
+                    "secured_return_with_risk_cover": {
+                        "type": "boolean"
+                    },
+                    "market_linked_return_with_risk_cover": {
+                        "type": "boolean"
+                    },
+                    "pension_annuity": {
+                        "type": "boolean"
+                    },
+                    "health_cover": {
+                        "type": "boolean"
+                    },
+                    "suitable_for_children": {
+                        "type": "boolean"
+                    },
+                    "others": {
+                        "type": "boolean"
+                    },
+                    "others_specify": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "risk_profile": {
+                "type": "object",
+                "description": "CORRECTED: Expanded from single string to checkbox object",
+                "properties": {
+                    "conservative_to_moderate": {
+                        "type": "boolean"
+                    },
+                    "aggressive": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "payment_method": {
+                "type": "object",
+                "description": "CORRECTED: Expanded from single string to checkbox object",
+                "properties": {
+                    "lump_sum_single_premium": {
+                        "type": "boolean"
+                    },
+                    "regular_installments_non_single_premium": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "time_frame": {
+                "type": "object",
+                "description": "CORRECTED: Expanded from single string to checkbox object",
+                "properties": {
+                    "after_3_to_5_years": {
+                        "type": "boolean"
+                    },
+                    "after_6_to_10_years": {
+                        "type": "boolean"
+                    },
+                    "after_11_to_15_years": {
+                        "type": "boolean"
+                    },
+                    "after_16_to_20_years": {
+                        "type": "boolean"
+                    },
+                    "after_21_years_or_more": {
+                        "type": "boolean"
+                    },
+                    "after_death_only": {
+                        "type": "boolean"
+                    },
+                    "others_specify": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "categorization_of_plans": {
+                "type": "object",
+                "description": "CORRECTED: Original schema had only a flat 'selected_plan' string. Actual form has a full categorization table with plans listed under each objective/risk-profile combination.",
+                "properties": {
+                    "pure_risk_cover": {
+                        "type": "object",
+                        "properties": {
+                            "conservative_to_moderate": {
+                                "type": "object",
+                                "properties": {
+                                    "tech_term": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_amar": {
+                                        "type": "boolean"
+                                    },
+                                    "new_jeevan_mangal": {
+                                        "type": "boolean"
+                                    },
+                                    "bhagya_lakshmi": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            },
+                            "aggressive": {
+                                "type": "object",
+                                "properties": {
+                                    "new_endowment_plus": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "risk_coverage_with_savings": {
+                        "type": "object",
+                        "properties": {
+                            "conservative_to_moderate": {
+                                "type": "object",
+                                "properties": {
+                                    "new_endowment_plan": {
+                                        "type": "boolean"
+                                    },
+                                    "new_jeevan_anand": {
+                                        "type": "boolean"
+                                    },
+                                    "new_bima_bachat": {
+                                        "type": "boolean"
+                                    },
+                                    "single_premium_endowment_plan": {
+                                        "type": "boolean"
+                                    },
+                                    "new_jeevan_money_back_20_years": {
+                                        "type": "boolean"
+                                    },
+                                    "new_jeevan_money_back_25_years": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_lakshya": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_labh": {
+                                        "type": "boolean"
+                                    },
+                                    "aadhar_stambh": {
+                                        "type": "boolean"
+                                    },
+                                    "aadhar_shila": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_umang": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_shiromani": {
+                                        "type": "boolean"
+                                    },
+                                    "bima_shree": {
+                                        "type": "boolean"
+                                    },
+                                    "micro_bachat": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "money_back_with_risk_cover": {
+                        "type": "object",
+                        "properties": {
+                            "conservative_to_moderate": {
+                                "type": "object",
+                                "properties": {
+                                    "new_bima_bachat": {
+                                        "type": "boolean"
+                                    },
+                                    "new_money_back_20_years": {
+                                        "type": "boolean"
+                                    },
+                                    "new_money_back_25_years": {
+                                        "type": "boolean"
+                                    },
+                                    "new_childrens_money_back_plan": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_tarun": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_umang": {
+                                        "type": "boolean"
+                                    },
+                                    "bima_shree": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "secured_return_with_risk_cover": {
+                        "type": "object",
+                        "properties": {
+                            "conservative_to_moderate": {
+                                "type": "object",
+                                "properties": {
+                                    "new_bima_bachat": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_shiromani": {
+                                        "type": "boolean"
+                                    },
+                                    "bima_shree": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "market_linked_return_with_risk_cover": {
+                        "type": "object",
+                        "properties": {
+                            "aggressive": {
+                                "type": "object",
+                                "properties": {
+                                    "new_endowment_plus": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "pension_annuity": {
+                        "type": "object",
+                        "properties": {
+                            "conservative_to_moderate": {
+                                "type": "object",
+                                "properties": {
+                                    "jeevan_shanti": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_nidhi": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "health_cover": {
+                        "type": "object",
+                        "properties": {
+                            "conservative_to_moderate": {
+                                "type": "object",
+                                "properties": {
+                                    "jeevan_arogya": {
+                                        "type": "boolean"
+                                    },
+                                    "cancer_cover": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "suitable_for_children": {
+                        "type": "object",
+                        "properties": {
+                            "conservative_to_moderate": {
+                                "type": "object",
+                                "properties": {
+                                    "new_childrens_money_back_plan": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_tarun": {
+                                        "type": "boolean"
+                                    },
+                                    "new_endowment_plan": {
+                                        "type": "boolean"
+                                    },
+                                    "new_bima_bachat": {
+                                        "type": "boolean"
+                                    },
+                                    "single_premium_endowment_plan": {
+                                        "type": "boolean"
+                                    },
+                                    "new_money_back_20_years": {
+                                        "type": "boolean"
+                                    },
+                                    "new_money_back_25_years": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_labh": {
+                                        "type": "boolean"
+                                    },
+                                    "aadhar_stambh": {
+                                        "type": "boolean"
+                                    },
+                                    "aadhar_shila": {
+                                        "type": "boolean"
+                                    },
+                                    "jeevan_umang": {
+                                        "type": "boolean"
+                                    },
+                                    "bima_shree": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "page_27": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "SuitabilityPlanDetailsAndCharges",
+        "type": "object",
+        "properties": {
+            "product_chosen": {
+                "type": "object",
+                "description": "Section 9: Product Chosen",
+                "properties": {
+                    "table_no": {
+                        "type": "string"
+                    },
+                    "plan_name": {
+                        "type": "string"
+                    },
+                    "term": {
+                        "type": "string"
+                    },
+                    "sum_assured": {
+                        "type": "number"
+                    },
+                    "mode": {
+                        "type": "string"
+                    },
+                    "premium": {
+                        "type": "number"
+                    }
+                }
+            },
+            "ulip_allocation_charges": {
+                "type": "object",
+                "properties": {
+                    "first_year": {
+                        "type": [
+                            "number",
+                            "string"
+                        ]
+                    },
+                    "second_year": {
+                        "type": [
+                            "number",
+                            "string"
+                        ]
+                    },
+                    "third_year_onwards": {
+                        "type": [
+                            "number",
+                            "string"
+                        ]
+                    }
+                }
+            },
+            "other_charges": {
+                "type": "object",
+                "properties": {
+                    "life_cover_charges_percent": {
+                        "type": [
+                            "number",
+                            "string"
+                        ]
+                    },
+                    "policy_administration_charges": {
+                        "type": [
+                            "number",
+                            "string"
+                        ]
+                    },
+                    "fund_management_charges": {
+                        "type": [
+                            "number",
+                            "string"
+                        ]
+                    }
+                }
+            },
+            "annuity_pension_details": {
+                "type": "object",
+                "properties": {
+                    "target_annuity_per_annum": {
+                        "type": [
+                            "number",
+                            "string"
+                        ]
+                    },
+                    "immediate_annuity": {
+                        "type": "object",
+                        "properties": {
+                            "amount": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
+                    "deferred_annuity": {
+                        "type": "object",
+                        "properties": {
+                            "deferment_period": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "amount": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "page_28": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "SuitabilityDeclarationsAndWaiver",
+        "type": "object",
+        "properties": {
+            "point_10_suitability_check": {
+                "type": "object",
+                "description": "ADDED: Point 10 — Is total insurance added to the present proposal reasonable in relation to income? Was entirely missing from original schema.",
+                "properties": {
+                    "is_total_insurance_reasonable_in_relation_to_income": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "description": "Agent's assessment of whether total insurance is justified relative to proposer income"
+                    }
+                }
+            },
+            "agent_declaration": {
+                "type": "object",
+                "description": "Declaration by the Agent/Intermediary",
+                "properties": {
+                    "agent_name": {
+                        "type": "string"
+                    },
+                    "statement": {
+                        "type": "string",
+                        "description": "ADDED: Declaration statement text agreed to by agent"
+                    },
+                    "place": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "signature": {
+                        "type": "string"
+                    }
+                }
+            },
+            "prospect_declaration": {
+                "type": "object",
+                "description": "Declaration by the Prospect",
+                "properties": {
+                    "prospect_name": {
+                        "type": "string"
+                    },
+                    "statement": {
+                        "type": "string",
+                        "description": "ADDED: Declaration statement text agreed to by prospect"
+                    },
+                    "preferred_plan_details": {
+                        "type": "object",
+                        "properties": {
+                            "table_no": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "plan_name": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "term": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "sum_assured": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            },
+                            "mode": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "premium": {
+                                "type": [
+                                    "number",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
+                    "place": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "signature": {
+                        "type": "string"
+                    }
+                }
+            },
+            "waiver_of_suitability_questionnaire": {
+                "type": "object",
+                "properties": {
+                    "is_waived": {
+                        "type": "boolean"
+                    },
+                    "place": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "date": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date"
+                    },
+                    "signature": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
